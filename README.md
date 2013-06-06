@@ -18,7 +18,9 @@ Or install it yourself as:
 
 ## Usage
 
-Usage instructions coming soon...
+To build the gem file use:
+
+	$ gem build ohanakapa.gemspec
 
 ## Contributing
 
