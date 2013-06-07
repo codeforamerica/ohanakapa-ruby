@@ -4,6 +4,10 @@ A ruby wrapper for the [Ohana API](https://github.com/codeforamerica/ohana-api)
 
 ## Installation
 
+**(UNDER DEVELOPMENT...)**
+
+**(The following installation directions will not work until the gem is registered with rubygems.org)**
+
 Add this line to your application's Gemfile:
 
     gem 'ohanakapa'
