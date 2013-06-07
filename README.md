@@ -31,4 +31,4 @@ To build the gem file use:
 5. Create new Pull Request
 
 ## Copyright
-Copyright (c) 2013 Code for America. See [LICENSE](https://github.com/codeforamerica/ohana-api/blob/master/LICENSE.md) for details.
+Copyright (c) 2013 Code for America. See [LICENSE](https://github.com/codeforamerica/ohana-api/blob/master/LICENSE.md) for details. Structure borrows from the [GitHub Ruby API wrapper](https://github.com/octokit/octokit.rb), which is copyright (c) 2011-2013 Wynn Netherland, Adam Stacoviak, Erik Michaels-Ober.

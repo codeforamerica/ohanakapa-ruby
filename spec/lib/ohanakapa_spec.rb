@@ -1,9 +1,13 @@
-require 'helper'
-
+require 'spec_helper'
 describe Ohanakapa do
-  after do
+ 
+	after do
     Ohanakapa.reset
   end
+
+	it 'should have a version' do
+				expect(Ohanakapa::VERSION).to_not be_nil
+	end
 
   describe ".respond_to?" do
     it "is true if method exists" do
