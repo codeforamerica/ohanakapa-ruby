@@ -1,4 +1,5 @@
 require 'ohanakapa/client'
+require 'ohanakapa/error'
 require 'spec_helper'
 
 describe Ohanakapa::Client do
@@ -11,12 +12,11 @@ describe Ohanakapa::Client do
 
   describe "error handling" do
 
-    it "displays not found error" do
+    it "searchs for id that does not exist and returns not found error" do
       stub_get("http://ohanapi.herokuapp.com/api/organizations/519c44065634241897000023").
         to_return(json_response("error_not_found.json"))
 
-      response = @client.organization("519c44065634241897000023")
-      expect(response["error"]).to eq("not_found")
+      expect{@client.organization("519c44065634241897000023")}.to raise_error(Ohanakapa::NotFound)
     end
 
     it "displays bad request error" 
