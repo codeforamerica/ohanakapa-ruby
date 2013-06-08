@@ -10,7 +10,8 @@ module Ohanakapa
       # @example
       #   Ohanakapa.orgs
       def organizations
-        get("organizations")
+        response = get("organizations")
+        response.response
       end
       alias :orgs :organizations
 
@@ -23,7 +24,8 @@ module Ohanakapa
       # @example
       #   Ohanakapa.org('519c44065634241897000023')
       def organization(id)
-        get("organizations/#{id}")
+        response = get("organizations/#{id}")
+        response.response
       end
       alias :org :organization
 
