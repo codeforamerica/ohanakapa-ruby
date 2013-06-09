@@ -7,8 +7,7 @@ module Ohanakapa
       # @return [Hashie::Mash] Hash representing a organization's details.
       def query(params)
         params.delete_if { |k, v| v.empty? }
-        response = get("search?=",params).response
-        response
+        response = get("search?=",params)
       end
 
     end

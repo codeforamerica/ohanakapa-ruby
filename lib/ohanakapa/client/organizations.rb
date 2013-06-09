@@ -10,8 +10,7 @@ module Ohanakapa
       # @example
       #   Ohanakapa.orgs
       def organizations
-        response = get("organizations").response
-        response
+        response = get("organizations")
       end
       alias :orgs :organizations
 
@@ -28,7 +27,7 @@ module Ohanakapa
         error = response.error
 
         if error.nil?
-          return response.response
+          return response
         elsif error == "not_found"
           raise Ohanakapa::NotFound
         elsif error == "bad_request"
