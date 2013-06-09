@@ -15,6 +15,7 @@ describe Ohanakapa::Client::Organizations do
       query = @client.organizations
       query[:response].length.should eq(30)
       query[:count].should eq(30)
+      query[:pagination][:count].should eq(1734)
       query.response.first["_id"].should eq("51a9fd0328217f89770001b2")
     end
 

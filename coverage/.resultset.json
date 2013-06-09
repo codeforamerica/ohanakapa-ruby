@@ -603,7 +603,6 @@
         null,
         null,
         null,
-        null,
         null
       ],
       "/Users/anselmbradford/Projects/ohanakapa-ruby/spec/lib/ohanakapa/client_spec.rb": [
@@ -671,6 +670,6 @@
         null
       ]
     },
-    "timestamp": 1370746422
+    "timestamp": 1370747729
   }
 }
