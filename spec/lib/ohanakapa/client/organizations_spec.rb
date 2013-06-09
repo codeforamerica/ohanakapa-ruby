@@ -14,8 +14,7 @@ describe Ohanakapa::Client::Organizations do
         to_return(json_response("organizations.json"))
       query = @client.organizations
       query[:response].length.should eq(30)
-      query[:count].should eq(30)
-      query[:pagination][:count].should eq(1734)
+      @client.pagination.items_total.should eq(1734)
       query.response.first["_id"].should eq("51a9fd0328217f89770001b2")
     end
 
@@ -27,7 +26,7 @@ describe Ohanakapa::Client::Organizations do
       stub_get("http://ohanapi.herokuapp.com/api/organizations/51a9fd0328217f89770001b2").
         to_return(json_response("organization.json"))
       query = @client.organization("51a9fd0328217f89770001b2")
-      query[:count].should eq(nil)
+      @client.pagination.should be_nil
       query[:response]["_id"].should eq("51a9fd0328217f89770001b2")
     end
 

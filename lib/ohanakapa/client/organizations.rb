@@ -11,6 +11,10 @@ module Ohanakapa
       #   Ohanakapa.orgs
       def organizations
         response = get("organizations")
+
+        pagination = response[:pagination]
+        @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
+        response
       end
       alias :orgs :organizations
 
@@ -36,6 +40,11 @@ module Ohanakapa
 
       end
       alias :org :organization
+
+      #TODO move pagination to a superclass or mixin
+      def pagination
+        @pagination
+      end
 
     end
   end
