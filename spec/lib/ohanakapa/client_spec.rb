@@ -1,6 +1,6 @@
+require 'spec_helper'
 require 'ohanakapa/client'
 require 'ohanakapa/error'
-require 'spec_helper'
 
 describe Ohanakapa::Client do
 
@@ -16,7 +16,7 @@ describe Ohanakapa::Client do
       stub_get("http://ohanapi.herokuapp.com/api/organizations/519c44065634241897000023").
         to_return(json_response("error_not_found.json"))
 
-      expect{@client.organization("519c44065634241897000023")}.to raise_error(Ohanakapa::NotFound)
+      expect {@client.organization("519c44065634241897000023")}.to raise_error(Ohanakapa::NotFound)
     end
 
     it "displays bad request error" 

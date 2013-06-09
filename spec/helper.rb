@@ -13,11 +13,13 @@ require 'webmock/rspec'
 
 WebMock.disable_net_connect!(:allow => 'coveralls.io')
 
+=begin
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
 end
+=end
 
 def a_delete(url)
   a_request(:delete, ohana_url(url))

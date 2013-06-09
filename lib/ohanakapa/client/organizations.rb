@@ -24,11 +24,17 @@ module Ohanakapa
       # @example
       #   Ohanakapa.org('519c44065634241897000023')
       def organization(id)
-        response = get("organizations/#{id}").response
-        if response.nil?
+        response = get("organizations/#{id}")
+        error = response.error
+
+        if error.nil?
+          return response.response
+        elsif error == "not_found"
           raise Ohanakapa::NotFound
+        elsif error == "bad_request"
+          raise Ohanakapa::BadRequest
         end
-        response
+
       end
       alias :org :organization
 
