@@ -34,7 +34,7 @@ module Ohanakapa
         error = response.error
 
         if error.nil?
-          response = Ohanakapa::Response.new(response,@pagination)
+          response = Ohanakapa::Response.new(response.response)
           return response
         elsif error == "not_found"
           raise Ohanakapa::NotFound
