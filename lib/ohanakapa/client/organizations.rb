@@ -17,7 +17,7 @@ module Ohanakapa
 
         pagination = response[:pagination]
         @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
-        response
+        response = Ohanakapa::Response.new(response,@pagination)
       end
       alias :orgs :organizations
 
@@ -34,6 +34,7 @@ module Ohanakapa
         error = response.error
 
         if error.nil?
+          response = Ohanakapa::Response.new(response,@pagination)
           return response
         elsif error == "not_found"
           raise Ohanakapa::NotFound

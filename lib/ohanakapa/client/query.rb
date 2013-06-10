@@ -17,7 +17,7 @@ module Ohanakapa
         response = get("search?=",params)
         pagination = response[:pagination]
         @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
-        response
+        response = Ohanakapa::Response.new(response,@pagination)
       end
     
     end

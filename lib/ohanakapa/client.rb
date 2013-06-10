@@ -1,6 +1,7 @@
 require 'ohanakapa/authentication'
 require 'ohanakapa/connection'
 require 'ohanakapa/request'
+require 'ohanakapa/response'
 require 'ohanakapa/pagination'
 
 require 'ohanakapa/client/organizations'
