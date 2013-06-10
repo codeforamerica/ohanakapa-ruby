@@ -3,6 +3,7 @@ require 'ohanakapa/connection'
 require 'ohanakapa/request'
 
 require 'ohanakapa/client/organizations'
+require 'ohanakapa/client/paginates'
 require 'ohanakapa/client/query'
 require 'ohanakapa/client/rate_limit'
 
@@ -24,6 +25,7 @@ module Ohanakapa
     include Ohanakapa::Request
 
     include Ohanakapa::Client::Organizations
+    include Ohanakapa::Client::Paginates
     include Ohanakapa::Client::Query
     include Ohanakapa::Client::RateLimit
 
