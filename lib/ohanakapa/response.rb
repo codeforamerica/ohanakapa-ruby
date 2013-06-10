@@ -4,13 +4,13 @@ module Ohanakapa
 	  # Initialize response object
     # @param response [Hash] Holds response hash.
     # @param pagination [Pagination] Holds pagination information.
-  	def initialize(response,pagination=nil)
-  		@response = response
+  	def initialize(content,pagination=nil)
+  		@content = content
   		@pagination = pagination
 		end
 
 		def content
-			@response
+			@content
 		end
 
 		def pagination

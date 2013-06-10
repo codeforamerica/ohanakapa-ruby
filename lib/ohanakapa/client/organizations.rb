@@ -13,11 +13,11 @@ module Ohanakapa
       # @example
       #   Ohanakapa.orgs
       def organizations
-        response = get("organizations")
+        query = get("organizations")
 
-        pagination = response[:pagination]
+        pagination = query[:pagination]
         @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
-        response = Ohanakapa::Response.new(response,@pagination)
+        Ohanakapa::Response.new(query.response,@pagination)
       end
       alias :orgs :organizations
 
@@ -30,11 +30,11 @@ module Ohanakapa
       # @example
       #   Ohanakapa.org('519c44065634241897000023')
       def organization(id)
-        response = get("organizations/#{id}")
-        error = response.error
+        query = get("organizations/#{id}")
+        error = query.error
 
         if error.nil?
-          response = Ohanakapa::Response.new(response.response)
+          response = Ohanakapa::Response.new(query.response)
           return response
         elsif error == "not_found"
           raise Ohanakapa::NotFound

@@ -14,10 +14,10 @@ describe Ohanakapa::Client::Query do
         to_return(json_response("query_keyword_market.json"))
 
       query = @client.query({:keyword=>"market"})
-      query[:response].length.should eq(22)
+      query.content.length.should eq(22)
       @client.pagination.items_current.should eq(22)
       @client.pagination.items_total.should eq(22)
-      query[:response].first["_id"].should eq("51a9fd0028217f8977000023")
+      query.content.first["_id"].should eq("51a9fd0028217f8977000023")
     end
 
     it "searches for keyword 'asdf'" do
@@ -25,7 +25,7 @@ describe Ohanakapa::Client::Query do
         to_return(json_response("query_keyword_asdf.json"))
 
       query = @client.query({:keyword=>"asdf"})
-      query[:response].length.should eq(0)
+      query.content.length.should eq(0)
 
       @client.pagination.current.should eq(1)
       @client.pagination.next.should be_nil
@@ -41,10 +41,10 @@ describe Ohanakapa::Client::Query do
         to_return(json_response("query_location_94401.json"))
 
       query = @client.query({:location=>"94401"})
-      query[:response].length.should eq(30)
+      query.content.length.should eq(30)
       @client.pagination.items_current.should eq(30)
       @client.pagination.items_total.should eq(48)
-      query[:response].first["_id"].should eq("51a9fd0328217f89770001fc")
+      query.content.first["_id"].should eq("51a9fd0328217f89770001fc")
     end
 
     it "searches for empty keyword and location '94401'" do
@@ -52,10 +52,10 @@ describe Ohanakapa::Client::Query do
         to_return(json_response("query_location_94401.json"))
 
       query = @client.query({:keyword=>nil,:location=>"94401"})
-      query[:response].length.should eq(30)
+      query.content.length.should eq(30)
       @client.pagination.items_current.should eq(30)
       @client.pagination.items_total.should eq(48)
-      query[:response].first["_id"].should eq("51a9fd0328217f89770001fc")
+      query.content.first["_id"].should eq("51a9fd0328217f89770001fc")
     end
 
     it "searches for empty location and keyword 'market'" do
@@ -63,10 +63,10 @@ describe Ohanakapa::Client::Query do
         to_return(json_response("query_keyword_market.json"))
 
       query = @client.query({:keyword=>"market",:location=>nil})
-      query[:response].length.should eq(22)
+      query.content.length.should eq(22)
       @client.pagination.items_current.should eq(22)
       @client.pagination.items_total.should eq(22)
-      query[:response].first["_id"].should eq("51a9fd0028217f8977000023")
+      query.content.first["_id"].should eq("51a9fd0028217f8977000023")
     end
 
   end

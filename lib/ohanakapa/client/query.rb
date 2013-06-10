@@ -14,10 +14,10 @@ module Ohanakapa
           v.nil? || v.empty? 
         }
 
-        response = get("search?=",params)
-        pagination = response[:pagination]
+        query = get("search?=",params)
+        pagination = query[:pagination]
         @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
-        Ohanakapa::Response.new(response.response,@pagination)
+        Ohanakapa::Response.new(query.response,@pagination)
       end
     
     end
