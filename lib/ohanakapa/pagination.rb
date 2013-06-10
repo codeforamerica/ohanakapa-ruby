@@ -14,16 +14,10 @@ module Ohanakapa
         #set pages to 1 if it is zero, at mininum there is one page
         @pages == 0 ? @pages = 1 : @pages 
 
-        # raise error if current is greater than pages
-        if (current > @pages)
-          raise "current page index cannot be greater than number of pages!"
+        # raise error if current is greater than pages or less than 1
+        if (goto_page(current) == false)
+          raise "current page index cannot be greater than number of pages or less than 1!"
         end
-        
-        @current = current                            #current page number
-        @prev = current-1 > 0 ? current-1 : nil       #previous page number
-        @next = current+1 <= @pages ? current+1 : nil #next page number
-        
-        calc_items_current
 
       end
 
