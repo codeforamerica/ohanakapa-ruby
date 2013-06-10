@@ -1,3 +1,4 @@
+
 module Ohanakapa
   class Client
     module Query

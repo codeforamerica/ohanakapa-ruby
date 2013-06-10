@@ -1,5 +1,3 @@
-require 'ohanakapa/pagination'
-
 module Ohanakapa
   class Client
     module Organizations
