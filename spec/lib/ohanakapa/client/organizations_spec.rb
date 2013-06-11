@@ -10,12 +10,12 @@ describe Ohanakapa::Client::Organizations do
   describe ".organizations" do
 
     it "returns all organizations" do
-      stub_get("http://ohanapi.herokuapp.com/api/organizations").
+      stub_get("http://ohanapi.herokuapp.com/api/organizations?page=1").
         to_return(json_response("organizations.json"))
       query = @client.organizations
       query.content.length.should eq(30)
       @client.pagination.items_total.should eq(1734)
-      query.content.first["_id"].should eq("51a9fd0328217f89770001b2")
+      query.content.first["_id"].should eq("51a9fd0028217f8977000002")
     end
 
   end

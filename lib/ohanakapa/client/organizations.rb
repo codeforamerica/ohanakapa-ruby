@@ -12,8 +12,9 @@ module Ohanakapa
       #   Ohanakapa.organizations
       # @example
       #   Ohanakapa.orgs
-      def organizations
-        query = get("organizations")
+      def organizations(params={:page=>1})
+        
+        query = get("organizations?",params)
 
         pagination = query[:pagination]
         @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
