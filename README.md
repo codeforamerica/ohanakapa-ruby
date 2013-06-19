@@ -26,6 +26,8 @@ To build the gem file use:
 
 	$ gem build ohanakapa.gemspec
 
+See the wiki for [Getting Started Guide](https://github.com/codeforamerica/ohanakapa-ruby/wiki/Getting-Started) to usage.
+
 ## Contributing
 
 1. Fork it
