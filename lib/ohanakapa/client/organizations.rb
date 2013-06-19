@@ -2,9 +2,6 @@ module Ohanakapa
   class Client
     module Organizations
 
-      #TODO move pagination to a superclass or mixin
-      #include Ohanakapa::Client::Paginates
-
       # Get all organizations
       #
       # @return [Hashie::Mash] Hash representing all organizations in database.

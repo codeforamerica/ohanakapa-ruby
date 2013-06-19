@@ -18,7 +18,7 @@ module Ohanakapa
         if (goto_page(current) == false)
           raise "current page index cannot be greater than number of pages or less than 1!"
         end
-
+        
       end
 
       # Go to a particular page
