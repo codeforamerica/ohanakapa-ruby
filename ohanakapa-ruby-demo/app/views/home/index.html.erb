@@ -1,0 +1,21 @@
+<h1>Ohana API queried:</h1>
+
+<p>
+	Total pages returned: <strong><%= @pagination.pages_total %></strong>
+</p>
+
+<p>
+	Total entries returned: <strong><%= @pagination.items_total %></strong>
+</p>
+
+<p>
+	Total items per page: <strong><%= @pagination.items_per_page %></strong>
+</p>
+
+<p>
+	Total items on the current page: <strong><%= @pagination.items_current %></strong>
+</p>
+
+<p>
+The first result has an ID of: <strong><%= @content[0]['_id'] %></strong>
+</p>
