@@ -2,10 +2,10 @@ module Ohanakapa
     class Pagination
 
       # Initialize pagination linked list
-      # @param current [Integer] The current page number.
-      # @param per_page [Integer] The number of results per page.
-      # @param count [Integer] The total number of results.
-      def initialize(current, per_page, count)
+      # @param optional current [Integer] The current page number, defaults to 1.
+      # @param optional per_page [Integer] The number of results per page, defaults to 30.
+      # @param optional count [Integer] The total number of results, defaults to 0.
+      def initialize(current_page=1, per_page=30, count=0)
         # Instance variables  
         @per_page = per_page                          #per page number
         @count = count                                #total number
@@ -15,7 +15,7 @@ module Ohanakapa
         @pages == 0 ? @pages = 1 : @pages 
 
         # raise error if current is greater than pages or less than 1
-        if (goto_page(current) == false)
+        if (goto_page(current_page) == false)
           raise "current page index cannot be greater than number of pages or less than 1!"
         end
         
@@ -24,11 +24,11 @@ module Ohanakapa
       # Go to a particular page
       # @param current [Integer] Page number to go to.
       # @return [Boolean] True if successfully set page, false if it is out of range.
-      def goto_page(current)
-        if current > 0 && current <= @pages
-          @current = current                          #current page number
-          @prev = current-1 > 0 ? current-1 : nil #previous page number
-          @next = current+1 <= @pages ? current+1 : nil #next page number
+      def goto_page(current_page)
+        if current_page > 0 && current_page <= @pages
+          @current_page = current_page                            #current page number
+          @prev = current_page-1 > 0 ? current_page-1 : nil       #previous page number
+          @next = current_page+1 <= @pages ? current_page+1 : nil #next page number
           calc_items_current
           return true
         else
@@ -39,13 +39,13 @@ module Ohanakapa
       # Advance the page by 1
       # @return [Boolean] True if successfully advanced page, false if it is out of range.
       def next_page
-        goto_page(@current+1)
+        goto_page(@current_page+1)
       end
 
       # Retract the page by 1
       # @return [Boolean] True if successfully retracted page, false if it is out of range.
       def prev_page
-        goto_page(@current-1)
+        goto_page(@current_page-1)
       end
       
       # Getters for properties
@@ -67,7 +67,7 @@ module Ohanakapa
       end
 
       def current
-        @current
+        @current_page
       end
 
       def prev
@@ -80,8 +80,10 @@ module Ohanakapa
 
       private
 
+      # calculate the number of items on the current page
       def calc_items_current
-        @items_current = @current == @pages ? @count % @per_page : @per_page
+        
+        @items_current = @current_page == @pages ? @count % @per_page : @per_page
       end
 
     end

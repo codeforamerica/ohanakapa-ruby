@@ -3,110 +3,241 @@ require 'ohanakapa/pagination'
 
 describe Ohanakapa::Pagination do
 
-  before do
-    @paginate = Ohanakapa::Pagination.new(1,30,64)
-  end
+  context "when using default values" do
+    # setup for pagination default values testing
+    before do
+      # default values of current page set to the first page, 
+      # 30 results per page, and 0 total items
+      @paginate = Ohanakapa::Pagination.new
+    end
+      
+    describe ".current" do
+      it "has current page of 1" do
+        @paginate.current.should == 1
+      end
+    end
 
-  describe "checks initial values" do
-      it{@paginate.current.should == 1}
-      it{@paginate.next.should == 2}
-      it{@paginate.prev.should be_nil}
-      it{@paginate.items_per_page.should == 30}
-      it{@paginate.items_total.should == 64}
-      it{@paginate.pages_total.should == 3}
-      it{@paginate.items_current.should == 30}
-  end
-  
-  describe ".goto_page" do
+    describe ".next" do
+      it "has a nil next page" do
+        @paginate.next.should be_nil
+      end
+    end
 
-    it "goes to a page" do
-      @paginate.goto_page(0).should eq(false)
+    describe ".prev" do
+      it "has a nil previous page" do
+        @paginate.prev.should be_nil
+      end
+    end
 
-      @paginate.goto_page(1).should eq(true)
-      @paginate.current.should == 1
-      @paginate.next.should == 2
-      @paginate.prev.should be_nil
+    describe ".items_per_page" do
+      it "has 30 results per page" do
+        @paginate.items_per_page.should == 30
+      end
+    end
 
+    describe ".pages_total" do
+      it "has 1 page total" do
+        @paginate.pages_total.should == 1
+      end
+    end
 
-      @paginate.goto_page(2).should eq(true)
-      @paginate.current.should == 2
-      @paginate.next.should == 3
-      @paginate.prev.should == 1
-      @paginate.items_current.should == 30
+    describe ".items_total" do
+      it "has 0 total items" do
+        @paginate.items_total.should == 0
+      end
+    end
 
+    describe ".items_current" do
+      it "has 0 items on the current page" do
+        @paginate.items_current.should == 0
+      end
+    end
 
-      @paginate.goto_page(3).should eq(true)
-      @paginate.current.should == 3
-      @paginate.next.should be_nil
-      @paginate.prev.should == 2
-      @paginate.items_current.should == 4
+    # tests goto_page
+    describe ".goto_page(0)" do
+      it "sets page to invalid value below range" do
+        @paginate.goto_page(0).should eq(false)
+        @paginate.current.should == 1
+        @paginate.items_current.should == 0
+        @paginate.next.should be_nil
+        @paginate.prev.should be_nil
+      end
+    end
 
-      @paginate.goto_page(4).should eq(false)
-      @paginate.current.should == 3
-      @paginate.next.should be_nil
-      @paginate.prev.should == 2
-      @paginate.items_current.should == 4
+    describe ".goto_page(1)" do
+      it "sets page to valid value" do
+        @paginate.goto_page(1).should eq(true)
+        @paginate.current.should == 1
+        @paginate.items_current.should == 0
+        @paginate.next.should be_nil
+        @paginate.prev.should be_nil
+      end
+    end
+
+    describe ".goto_page(2)" do
+      it "sets page to invalid value above range" do
+        @paginate.goto_page(2).should eq(false)
+        @paginate.current.should == 1
+        @paginate.items_current.should == 0
+        @paginate.next.should be_nil
+        @paginate.prev.should be_nil
+      end
+    end
+
+    # tests prev_page
+    describe ".prev_page" do
+      it "sets page to invalid value below range" do
+        @paginate.prev_page.should eq(false)
+        @paginate.current.should == 1
+        @paginate.items_current.should == 0
+        @paginate.next.should be_nil
+        @paginate.prev.should be_nil
+      end
+    end
+
+    # tests next_page
+    describe ".next_page" do
+      it "sets page to invalid value above range" do
+        @paginate.next_page.should eq(false)
+        @paginate.current.should == 1
+        @paginate.items_current.should == 0
+        @paginate.next.should be_nil
+        @paginate.prev.should be_nil
+      end
     end
 
   end
 
-  describe ".next_page" do
-
-    it "advances a page" do
-      @paginate.next_page.should eq(true)
-      @paginate.current.should == 2
-      @paginate.next.should == 3
-      @paginate.prev.should == 1
-      @paginate.items_current.should == 30
-
-
-      @paginate.next_page.should eq(true)
-      @paginate.current.should == 3
-      @paginate.next.should be_nil
-      @paginate.prev.should == 2
-      @paginate.items_current.should == 4
-
-      @paginate.next_page.should eq(false)
-      @paginate.current.should == 3
-      @paginate.next.should be_nil
-      @paginate.prev.should == 2
-      @paginate.items_current.should == 4
+  context "When using set values" do
+    
+    # setup for pagination set values testing
+    before do
+      # default values of current page set to the first page, 
+      # 30 results per page, and 0 total items
+      @paginate = Ohanakapa::Pagination.new(2,20,64)
     end
 
-  end
+    describe ".current" do
+      it "has current page of 1" do
+        @paginate.current.should == 2
+      end
+    end
 
-  describe ".prev_page" do
+    describe ".next" do
+      it "has a next page of 3" do
+        @paginate.next.should == 3
+      end
+    end
 
-    it "retracts a page" do
-      @paginate.prev_page.should eq(false)
-      @paginate.current.should == 1
-      @paginate.next.should == 2
-      @paginate.prev.should be_nil
-      @paginate.items_current.should == 30
+    describe ".prev" do
+      it "has a previous page of 1" do
+        @paginate.prev.should == 1
+      end
+    end
 
-      @paginate.goto_page(3).should eq(true)
-      @paginate.current.should == 3
-      @paginate.next.should be_nil
-      @paginate.prev.should == 2
-      @paginate.items_current.should == 4
+    describe ".items_per_page" do
+      it "has 20 results per page" do
+        @paginate.items_per_page.should == 20
+      end
+    end
 
-      @paginate.prev_page.should eq(true)
-      @paginate.current.should == 2
-      @paginate.next.should == 3
-      @paginate.prev.should == 1
-      @paginate.items_current.should == 30
+    describe ".pages_total" do
+      it "has 4 page total" do
+        @paginate.pages_total.should == 4
+      end
+    end
 
-      @paginate.prev_page.should eq(true)
-      @paginate.current.should == 1
-      @paginate.next.should == 2
-      @paginate.prev.should be_nil
-      @paginate.items_current.should == 30
+    describe ".items_total" do
+      it "has 64 total items" do
+        @paginate.items_total.should == 64
+      end
+    end
 
-      @paginate.prev_page.should eq(false)
-      @paginate.current.should == 1
-      @paginate.next.should == 2
-      @paginate.prev.should be_nil
-      @paginate.items_current.should == 30
+    describe ".items_current" do
+      it "has 20 items on the current page" do
+        @paginate.items_current.should == 20
+      end
+    end
+
+    # tests goto_page
+    describe ".goto_page(0)" do
+      it "sets page to invalid value below range" do
+        @paginate.goto_page(0).should eq(false)
+        @paginate.current.should == 2
+        @paginate.items_current.should == 20
+        @paginate.next.should == 3
+        @paginate.prev.should == 1
+      end
+    end
+
+    describe ".goto_page(1)" do
+      it "sets page to valid value" do
+        @paginate.goto_page(1).should eq(true)
+        @paginate.current.should == 1
+        @paginate.items_current.should == 20
+        @paginate.next.should == 2
+        @paginate.prev.should be_nil
+      end
+    end
+
+    describe ".goto_page(2)" do
+      it "sets page to invalid value above range" do
+        @paginate.goto_page(2).should eq(true)
+        @paginate.current.should == 2
+        @paginate.items_current.should == 20
+        @paginate.next.should == 3
+        @paginate.prev.should == 1
+      end
+    end
+
+     describe ".goto_page(4)" do
+      it "sets page to invalid value above range" do
+        @paginate.goto_page(4).should eq(true)
+        @paginate.current.should == 4
+        @paginate.items_current.should == 4
+        @paginate.next.should be_nil
+        @paginate.prev.should == 3
+      end
+    end
+
+    # tests prev_page
+    describe ".prev_page" do
+      it "sets page to invalid value below range" do
+        @paginate.prev_page.should eq(true)
+        @paginate.current.should == 1
+        @paginate.items_current.should == 20
+        @paginate.next.should == 2
+        @paginate.prev.should be_nil
+
+        @paginate.prev_page.should eq(false)
+        @paginate.current.should == 1
+        @paginate.items_current.should == 20
+        @paginate.next.should == 2
+        @paginate.prev.should be_nil
+      end
+    end
+
+    # tests next_page
+    describe ".next_page" do
+      it "sets page to invalid value above range" do
+        @paginate.next_page.should eq(true)
+        @paginate.current.should == 3
+        @paginate.items_current.should == 20
+        @paginate.next.should == 4
+        @paginate.prev.should == 2
+
+        @paginate.next_page.should eq(true)
+        @paginate.current.should == 4
+        @paginate.items_current.should == 4
+        @paginate.next.should be_nil
+        @paginate.prev.should == 3
+
+        @paginate.next_page.should eq(false)
+        @paginate.current.should == 4
+        @paginate.items_current.should == 4
+        @paginate.next.should be_nil
+        @paginate.prev.should == 3
+      end
     end
 
   end

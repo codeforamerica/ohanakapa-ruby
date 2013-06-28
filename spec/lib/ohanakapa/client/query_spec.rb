@@ -14,9 +14,9 @@ describe Ohanakapa::Client::Query do
         to_return(json_response("query_keyword_market.json"))
 
       query = @client.query({:keyword=>"market"})
-      query.content.length.should eq(22)
-      @client.pagination.items_current.should eq(22)
-      @client.pagination.items_total.should eq(22)
+      query.content.length.should eq(30)
+      @client.pagination.items_current.should eq(30)
+      @client.pagination.items_total.should eq(43)
       query.content.first["_id"].should eq("51a9fd0028217f8977000023")
     end
 
@@ -63,12 +63,23 @@ describe Ohanakapa::Client::Query do
         to_return(json_response("query_keyword_market.json"))
 
       query = @client.query({:keyword=>"market",:location=>nil})
-      query.content.length.should eq(22)
-      @client.pagination.items_current.should eq(22)
-      @client.pagination.items_total.should eq(22)
+      query.content.length.should eq(30)
+      @client.pagination.items_current.should eq(30)
+      @client.pagination.items_total.should eq(43)
       query.content.first["_id"].should eq("51a9fd0028217f8977000023")
     end
+=begin
+    describe ".empty_set" do
 
+      it "returns empty response set"
+        query = @client.empty_set
+        query.content.length.should eq(0)
+        @client.pagination.items_current.should eq(0)
+        @client.pagination.items_total.should eq(0)
+      end
+
+    end
+=end
   end
 
 end

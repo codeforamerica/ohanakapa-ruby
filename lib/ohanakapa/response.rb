@@ -2,11 +2,22 @@ module Ohanakapa
   class Response
 
 	  # Initialize response object
-    # @param response [Hash] Holds response hash.
-    # @param pagination [Pagination] Holds pagination information.
-  	def initialize(content,pagination=nil)
+    # @param content [String] Content of the response.
+    # @param pagination [Ohanakapa::Pagination] Holds pagination information.
+  	def initialize(content=nil,pagination=nil)
+  		
+  		if content.nil?
+  			content = {:response=>[]}
+  		end
+  		
   		@content = content
+
+  		if pagination.nil?
+  			pagination = Ohanakapa::Pagination.new
+  		end
+
   		@pagination = pagination
+
 		end
 
 		def content
