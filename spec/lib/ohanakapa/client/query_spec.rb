@@ -78,7 +78,7 @@ describe Ohanakapa::Client::Query do
 
         query.pagination.items_current.should eq(0)
         query.pagination.items_total.should eq(0)
-        query.content[:response].length.should eq(0)
+        query.content.should be_nil
       end
 
     end

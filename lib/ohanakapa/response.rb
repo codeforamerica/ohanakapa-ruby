@@ -5,11 +5,7 @@ module Ohanakapa
     # @param content [String] Content of the response.
     # @param pagination [Ohanakapa::Pagination] Holds pagination information.
   	def initialize(content=nil,pagination=nil)
-  		
-  		if content.nil?
-  			content = {:response=>[]}
-  		end
-  		
+
   		@content = content
 
   		if pagination.nil?

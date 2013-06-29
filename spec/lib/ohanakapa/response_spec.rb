@@ -16,9 +16,8 @@ describe Ohanakapa::Response do
     end
 
     describe ".content" do
-      it "response has length of 0" do
-        @response.content.should == {:response=>[]}
-        @response.content[:response].length.should == 0
+      it "is nil" do
+        @response.content.should be_nil
       end
     end
 
