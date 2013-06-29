@@ -68,18 +68,21 @@ describe Ohanakapa::Client::Query do
       @client.pagination.items_total.should eq(43)
       query.content.first["_id"].should eq("51a9fd0028217f8977000023")
     end
-=begin
+
     describe ".empty_set" do
 
-      it "returns empty response set"
+      it "returns empty response set" do
         query = @client.empty_set
-        query.content.length.should eq(0)
-        @client.pagination.items_current.should eq(0)
-        @client.pagination.items_total.should eq(0)
+        query.should be_an_instance_of Ohanakapa::Response
+        query.pagination.should be_an_instance_of Ohanakapa::Pagination
+
+        query.pagination.items_current.should eq(0)
+        query.pagination.items_total.should eq(0)
+        query.content[:response].length.should eq(0)
       end
 
     end
-=end
+
   end
 
 end
