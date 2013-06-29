@@ -58,6 +58,16 @@ describe Ohanakapa::Client::Query do
       query.content.first["_id"].should eq("51a9fd0328217f89770001fc")
     end
 
+    it "searches for invalid location '1111111'" do
+      stub_get("http://ohanapi.herokuapp.com/api/search?location=1111111").
+        to_return(json_response("query_location_1111111.json"))
+
+      query = @client.query({:location=>"1111111"})
+      query.content.should be_nil
+      query.pagination.items_current.should eq(0)
+      query.pagination.items_total.should eq(0)
+    end
+
     it "searches for empty location and keyword 'market'" do
       stub_get("http://ohanapi.herokuapp.com/api/search?keyword=market").
         to_return(json_response("query_keyword_market.json"))

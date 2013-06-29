@@ -12,9 +12,21 @@ module Ohanakapa
         }
 
         query = get("search?=",params)
-        pagination = query[:pagination]
-        @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
-        Ohanakapa::Response.new(query.response,@pagination)
+        error = query.error
+
+        if error.nil?
+          pagination = query[:pagination]
+          @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
+          response = Ohanakapa::Response.new(query.response,@pagination)
+          return response
+        elsif error == "not_found"
+          raise Ohanakapa::NotFound
+        elsif error == "bad_request"
+          if (query.specific_reason == "Invalid ZIP code or address")
+            return self.empty_set
+          end
+          raise Ohanakapa::BadRequest
+        end
       end
 
       # Returns an empty result set formatted like a query response
