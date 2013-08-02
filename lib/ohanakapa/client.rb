@@ -18,8 +18,6 @@ module Ohanakapa
       Configuration::VALID_OPTIONS_KEYS.each do |key|
         send("#{key}=", options[key])
       end
-
-      login_and_password_from_netrc(options[:netrc])
     end
 
     include Ohanakapa::Authentication
