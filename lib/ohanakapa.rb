@@ -1,4 +1,3 @@
-#require 'netrc'
 require 'ohanakapa/configuration'
 require 'ohanakapa/error'
 require 'ohanakapa/client'

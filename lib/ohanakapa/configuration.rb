@@ -10,15 +10,10 @@ module Ohanakapa
       :api_endpoint,
       :web_endpoint,
       :status_api_endpoint,
-      :login,
-      :password,
       :proxy,
-      :oauth_token,
-      :client_id,
-      :client_secret,
+      :api_token,
       :user_agent,
       :request_host,
-      :netrc,
       :auto_traversal,
       :per_page].freeze
 
@@ -58,14 +53,9 @@ module Ohanakapa
       self.adapter             = DEFAULT_ADAPTER
       self.api_version         = DEFAULT_API_VERSION
       self.api_endpoint        = DEFAULT_API_ENDPOINT
-      self.login               = nil
-      self.password            = nil
       self.proxy               = nil
-      self.oauth_token         = nil
-      self.client_id           = nil
-      self.client_secret       = nil
+      self.api_token           = nil
       self.request_host        = nil
-      self.netrc               = false
       self.user_agent          = DEFAULT_USER_AGENT
       self.auto_traversal      = DEFAULT_AUTO_TRAVERSAL
     end

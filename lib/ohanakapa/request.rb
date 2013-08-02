@@ -47,27 +47,22 @@ module Ohanakapa
     def request(method, path, options={})
       #path.sub(%r{^/}, '') #leading slash in path fails
 
-      token = options.delete(:access_token) ||
-              options.delete(:oauth_token)  ||
-              oauth_token
-
+      token = options.delete(:api_token) || api_token
+  
       force_urlencoded = options.delete(:force_urlencoded) || false
 
       url = options.delete(:endpoint) || api_endpoint
 
       conn_options = {
-        :authenticate => token.nil?,
         :force_urlencoded => force_urlencoded,
         :url => url
       }
 
       response = connection(conn_options).send(method) do |request|
 
-        request.headers['Accept'] =  options.delete(:accept) || 'application/vnd.ohanapi+json; version=1'
+        request.headers['Accept'] = options.delete(:accept) || 'application/vnd.ohanapi+json; version=1'
 
-        if token
-          request.headers[:authorization] = "token #{token}"
-        end
+        request.headers["X-Api-Token"] = token if token
 
         case method
         when :get
