@@ -17,7 +17,7 @@ module Ohanakapa
         options.merge!(:proxy => proxy)
       end
 
-      if !oauthed? && !authenticated? && unauthed_rate_limited?
+      if unauthed_rate_limited?
         options.merge!(:params => unauthed_rate_limit_params)
       end
 
@@ -39,10 +39,6 @@ module Ohanakapa
         faraday_config_block.call(builder) if faraday_config_block
 
         builder.adapter *adapter
-      end
-
-      if options[:authenticate] and authenticated?
-        connection.basic_auth authentication[:login], authentication[:password]
       end
 
       connection.headers[:user_agent] = user_agent
