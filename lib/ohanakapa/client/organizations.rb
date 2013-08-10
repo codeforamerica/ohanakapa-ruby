@@ -2,6 +2,8 @@ module Ohanakapa
   class Client
     module Organizations
 
+    include Ohanakapa::Client::Organizations::Nearby
+
       # Get all organizations
       #
       # @return [Hashie::Mash] Hash representing all organizations in database.
