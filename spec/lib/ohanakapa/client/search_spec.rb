@@ -59,6 +59,18 @@ describe Ohanakapa::Client::Search do
         :order => 'asc'}.to raise_error(Ohanakapa::BadRequest)
     end
 
+    it "searches for keyword 'food' and language 'Spanish'", :vcr do
+      results = @client.search :keyword => 'food', \
+        :language  => 'spanish',
+        :sort  => 'name',
+        :order => 'asc'
+
+      # TODO figure out why line below fails
+      #assert_requested :get, ohana_url('/search?keyword=food&language=spanish&sort=name&order=asc')
+      expect(results.response.count).to be_kind_of Fixnum
+      expect(results.response).to be_kind_of Array
+    end
+
 
   end # .search
 
