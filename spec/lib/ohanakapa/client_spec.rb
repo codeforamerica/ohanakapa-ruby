@@ -4,41 +4,72 @@ require 'ohanakapa/error'
 
 describe Ohanakapa::Client do
 
-  describe "error handling" do
-    before (:each) { @client = Ohanakapa::Client.new }
+  describe "module configuration" do
 
-    it "returns not found error when search for id that does not exist" do
-      stub_get("http://ohanapi.herokuapp.com/api/organizations/519c44065634241897000023").
-        to_return(json_response("error_not_found.json"))
-
-      expect {@client.organization("519c44065634241897000023")}.to raise_error(Ohanakapa::NotFound)
+    before do
+      Ohanakapa.reset!
+      Ohanakapa.configure do |config|
+        Ohanakapa::Configurable.keys.each do |key|
+          config.send("#{key}=", "Some #{key}")
+        end
+      end
     end
 
-    xit "displays bad request error" do
-      stub_get("http://ohanapi.herokuapp.com/api/search?id=519c44065634241897000023").
-        to_return(json_response("error_bad_request.json"))
-
-      response = @client.search({id:"519c44065634241897000023"})
-      expect(response["error"]).to eq("bad_request")
-    end
-  end
-
-  describe "ratelimit" do
-
-    before(:each) do
-      Ohanakapa.api_token = "d234gasd56567"
-      stub_request(:get, "http://ohanapi.herokuapp.com/api/rate_limit?api_token=d234gasd56567").
-        to_return(:status => 200, :body => '', :headers =>
-          { 'X-RateLimit-Limit' => 5000, 'X-RateLimit-Remaining' => 5000})
-      @client = Ohanakapa::Client.new
+    after do
+      Ohanakapa.reset!
     end
 
-    it "gets the ratelimit-limit from the header" do
-      expect(@client.ratelimit).to eq(5000)
+    it "inherits the module configuration" do
+      client = Ohanakapa::Client.new
+      Ohanakapa::Configurable.keys.each do |key|
+        expect(client.instance_variable_get(:"@#{key}")).to eq "Some #{key}"
+      end
     end
 
-    it "gets the ratelimit-remaining using header" do
-      expect(@client.ratelimit_remaining).to eq(5000)
+    describe "with class level configuration" do
+
+      before do
+        @opts = {
+          :connection_options => {:ssl => {:verify => false}},
+          :per_page => 40
+        }
+      end
+
+      it "overrides module configuration" do
+        client = Ohanakapa::Client.new(@opts)
+        expect(client.per_page).to eq 40
+        expect(client.auto_paginate).to eq Ohanakapa.auto_paginate
+      end
+
+      it "can set configuration after initialization" do
+        client = Ohanakapa::Client.new
+        client.configure do |config|
+          @opts.each do |key, value|
+            config.send("#{key}=", value)
+          end
+        end
+        expect(client.per_page).to eq 40
+        expect(client.auto_paginate).to eq Ohanakapa.auto_paginate
+      end
+
+      it "masks passwords on inspect" do
+        client = Ohanakapa::Client.new(@opts)
+        inspected = client.inspect
+        expect(inspected).to_not include "il0veruby"
+      end
+
+      it "masks tokens on inspect" do
+        client = Ohanakapa::Client.new(:access_token => '87614b09dd141c22800f96f11737ade5226d7ba8')
+        inspected = client.inspect
+        expect(inspected).to_not match "87614b09dd141c22800f96f11737ade5226d7ba8"
+      end
+
+      it "masks client secrets on inspect" do
+        client = Ohanakapa::Client.new(:client_secret => '87614b09dd141c22800f96f11737ade5226d7ba8')
+        inspected = client.inspect
+        expect(inspected).to_not match "87614b09dd141c22800f96f11737ade5226d7ba8"
+      end
+
     end
   end
 

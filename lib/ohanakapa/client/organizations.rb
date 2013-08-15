@@ -2,8 +2,6 @@ module Ohanakapa
   class Client
     module Organizations
 
-    include Ohanakapa::Client::Organizations::Nearby
-
       # Get all organizations
       #
       # @return [Hashie::Mash] Hash representing all organizations in database.
@@ -11,13 +9,8 @@ module Ohanakapa
       #   Ohanakapa.organizations
       # @example
       #   Ohanakapa.orgs
-      def organizations(params={:page=>1})
-        
-        query = get("organizations?",params)
-
-        pagination = query[:pagination]
-        @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
-        Ohanakapa::Response.new(query.response,@pagination)
+      def organizations(params={})  
+        get("organizations",params)
       end
       alias :orgs :organizations
 
@@ -30,11 +23,27 @@ module Ohanakapa
       # @example
       #   Ohanakapa.org('519c44065634241897000023')
       def organization(id)
-        query = get("organizations/#{id}")
+        get("organizations/#{id}")
+      end
+      alias :org :organization
+
+=begin
+      # Get nearby organizations to an organization, based on its ID
+      #
+      # @param id [String] Organization ID.
+      # @return [Hashie::Mash] Hash representing nearby organizations.
+      # @example
+      #   Ohanakapa.nearby('519c44065634241897000023')
+      def nearby(id)
+        query = get("organizations/#{id}/nearby")
         error = query.error
 
+        pagination = query[:pagination]
+        @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
+        Ohanakapa::Response::Wrapper.new(query.response,@pagination)
+
         if error.nil?
-          response = Ohanakapa::Response.new(query.response)
+          response = Ohanakapa::Response::Wrapper.new(query.response)
           return response
         elsif error == "not_found"
           raise Ohanakapa::NotFound
@@ -43,7 +52,7 @@ module Ohanakapa
         end
 
       end
-      alias :org :organization
+=end      
 
     end
   end
