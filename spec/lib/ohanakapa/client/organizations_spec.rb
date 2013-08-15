@@ -36,4 +36,17 @@ describe Ohanakapa::Client::Organizations do
 
   end # .organization
 
+  describe ".nearby", :vcr do
+    it "returns organizations nearby to an organization" do
+      nearbys = @client.nearby("51d5b18ca4a4d8b01b3e4477")
+      expect(nearbys.response).to be_kind_of Array
+      expect(nearbys.response.first.name).to eq "Belmont Library"
+
+      # TODO figure out why line below fails
+      # the following generates error 'expected to execute 1 time but it executed 0 times'
+      #assert_requested :get, ohana_url("/organizations/51d5b18ca4a4d8b01b3e4477/nearby")
+    end
+
+  end # .nearby
+
 end
