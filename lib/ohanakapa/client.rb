@@ -6,6 +6,8 @@ require 'ohanakapa/client/organizations'
 require 'ohanakapa/client/search'
 require 'ohanakapa/client/rate_limit'
 
+require 'ohanakapa/response/wrapper'
+
 module Ohanakapa
   class Client
 

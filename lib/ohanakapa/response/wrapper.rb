@@ -1,3 +1,5 @@
+require 'ohanakapa/response/pagination'
+
 module Ohanakapa
   module Response
     class Wrapper
