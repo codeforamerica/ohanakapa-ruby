@@ -105,8 +105,8 @@ module Ohanakapa
         options[:headers][:accept] = accept
       end
 
-      @last_response = response = agent.call(method, URI.encode(path), options)
-      response.data
+      response = agent.call(method, URI.encode(path), options)
+      @last_response = Ohanakapa::Response::Wrapper.new(response) # wrap Sawyer::Response in Ohanakapa wrapper
     end
 
     def sawyer_options

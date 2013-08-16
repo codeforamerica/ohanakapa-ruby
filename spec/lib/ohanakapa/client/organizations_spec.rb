@@ -11,7 +11,7 @@ describe Ohanakapa::Client::Organizations do
 
     it "returns all organizations" do
       organizations = @client.organizations
-      expect(organizations.response).to be_kind_of Array
+      expect(organizations.content).to be_kind_of Array
 
       # TODO figure out why line below fails
       # the following generates error 'expected to execute 1 time but it executed 0 times'
@@ -23,7 +23,7 @@ describe Ohanakapa::Client::Organizations do
   describe ".organization", :vcr do
     it "returns an organization" do
       organization = @client.organization("51d5b18ca4a4d8b01b3e4477")
-      expect(organization.response.name).to eq "Friends of the Belmont Library"
+      expect(organization.content.name).to eq "Friends of the Belmont Library"
 
       # TODO figure out why line below fails
       # the following generates error 'expected to execute 1 time but it executed 0 times'
@@ -39,8 +39,8 @@ describe Ohanakapa::Client::Organizations do
   describe ".nearby", :vcr do
     it "returns organizations nearby to an organization" do
       nearbys = @client.nearby("51d5b18ca4a4d8b01b3e4477")
-      expect(nearbys.response).to be_kind_of Array
-      expect(nearbys.response.first.name).to eq "Belmont Library"
+      expect(nearbys.content).to be_kind_of Array
+      expect(nearbys.content.first.name).to eq "Belmont Library"
 
       # TODO figure out why line below fails
       # the following generates error 'expected to execute 1 time but it executed 0 times'

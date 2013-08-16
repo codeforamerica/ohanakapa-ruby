@@ -17,11 +17,9 @@ module Ohanakapa
       end
 
       # Returns an empty result set formatted like a query response
-      # @return [Sawyer::Resource] An resource object.
+      # @return [Ohanakapa::Response::Wrapper] An resource object.
       def empty_set
-        val = '{"response":[],"count":0,"pagination":{"current":1,"previous":null,"next":2,"per_page":30,"pages":0,"count":0}}'
-        data = JSON.parse(val)
-        sawyer = Sawyer::Resource.new(agent,data)
+        Ohanakapa::Response::Wrapper.new
       end
 
 
