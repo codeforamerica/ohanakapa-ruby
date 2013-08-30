@@ -7,6 +7,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 ]
 SimpleCov.start
 
+require 'json'
 require 'ohanakapa'
 require 'rspec'
 require 'webmock/rspec'
@@ -21,7 +22,7 @@ require 'vcr'
 VCR.configure do |c|
   c.configure_rspec_metadata!
   c.filter_sensitive_data("<<API_TOKEN>>") do
-      ENV['OHANAKAPA_API_TOKEN']
+      ENV['OHANAKAPA_TEST_API_TOKEN']
   end
   c.default_cassette_options = {
     :serialize_with             => :json,
@@ -33,6 +34,9 @@ VCR.configure do |c|
   c.hook_into :webmock
 end
 
+def test_api_token
+  ENV.fetch 'OHANAKAPA_TEST_API_TOKEN'
+end
 
 def stub_delete(url)
   stub_request(:delete, ohana_url(url))
@@ -76,11 +80,9 @@ def json_response(file)
 end
 
 def ohana_url(url)
-  url =~ /^http/ ? url : "https://ohanapi.herokuapp.com/api#{url}"
+  url =~ /^http/ ? url : "http://ohanapi-staging.herokuapp.com/api#{url}"
 end
 
 def api_token_client
-  Ohanakapa::Client.new
-  # TODO configure environmental variables
-  #Ohanakapa::Client.new(:api_token => ENV.fetch('OHANAKAPA_API_TOKEN'))
+  Ohanakapa::Client.new(:api_token => test_api_token)
 end

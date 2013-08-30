@@ -1,6 +1,7 @@
 require 'ohanakapa/client'
 require 'ohanakapa/default'
 
+# Ruby toolkit for the Ohana API
 module Ohanakapa
 
 	class << self

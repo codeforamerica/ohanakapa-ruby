@@ -1,0 +1,6 @@
+--no-private
+--title=""
+--markup=markdown
+--template-path=./yard
+--exclude lib/ohanakapa/arguments.rb
+--exclude lib/ohanakapa/response

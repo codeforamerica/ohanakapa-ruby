@@ -1,20 +1,20 @@
 require 'sawyer'
-require 'ohanakapa/authentication'
+require 'ohanakapa/arguments'
 require 'ohanakapa/configurable'
-
+require 'ohanakapa/authentication'
+require 'ohanakapa/rate_limit'
 require 'ohanakapa/client/organizations'
+require 'ohanakapa/client/locations'
 require 'ohanakapa/client/search'
 require 'ohanakapa/client/rate_limit'
-
-require 'ohanakapa/response/wrapper'
 
 module Ohanakapa
   class Client
 
     include Ohanakapa::Authentication
     include Ohanakapa::Configurable
-
     include Ohanakapa::Client::Organizations
+    include Ohanakapa::Client::Locations
     include Ohanakapa::Client::Search
     include Ohanakapa::Client::RateLimit
 
@@ -36,6 +36,20 @@ module Ohanakapa
       opts.hash == options.hash
     end
 
+    # Text representation of the client, masking tokens and passwords
+    #
+    # @return [String]
+    def inspect
+      inspected = super
+
+      # Only show last 4 of api token
+      if @api_token
+        inspected = inspected.gsub! @api_token, "#{'*'*32}#{@api_token[32..-1]}"
+      end
+
+      inspected
+    end
+
     # Make a HTTP GET request
     #
     # @param url [String] The path, relative to {#api_endpoint}
@@ -43,6 +57,15 @@ module Ohanakapa
     # @return [Sawyer::Resource]
     def get(url, options = {})
       request :get, url, parse_query_and_convenience_headers(options)
+    end
+
+    # Make a HTTP HEAD request
+    #
+    # @param url [String] The path, relative to {#api_endpoint}
+    # @param options [Hash] Query and header params for request
+    # @return [Sawyer::Resource]
+    def head(url, options = {})
+      request :head, url, parse_query_and_convenience_headers(options)
     end
 
     # Make one or more HTTP GET requests, optionally fetching
@@ -54,9 +77,9 @@ module Ohanakapa
     # @return [Sawyer::Resource]
     def paginate(url, options = {})
       opts = parse_query_and_convenience_headers(options.dup)
-      if @auto_paginate || @per_page
-        opts[:query][:per_page] ||=  @per_page || (@auto_paginate ? 100 : nil)
-      end
+      # if @auto_paginate
+      #   opts[:query][:per_page] ||=  @per_page || (@auto_paginate ? 100 : nil)
+      # end
 
       data = request(:get, url, opts)
 
@@ -77,8 +100,8 @@ module Ohanakapa
     def agent
       @agent ||= Sawyer::Agent.new(api_endpoint, sawyer_options) do |http|
         http.headers[:accept] = default_media_type
-        http.headers[:user_agent] = user_agent        
-        if api_token_authenticated?
+        http.headers[:user_agent] = user_agent
+        if application_authenticated?
           http.headers["X-Api-Token"] = @api_token
         end
       end
@@ -100,16 +123,32 @@ module Ohanakapa
 
     private
 
-    def request(method, path, options)
+    def request(method, path, data)
+      options = {}
+      options[:query]   = data.delete(:query) || {}
+      options[:headers] = data.delete(:headers) || {}
 
-      if accept = options.delete(:accept)
-        options[:headers] ||= {}
+      if application_authenticated?
+        options[:query].merge! application_authentication
+      end
+      if accept = data.delete(:accept)
         options[:headers][:accept] = accept
       end
 
-      response = agent.call(method, URI.encode(path), options)
-      @last_response = Ohanakapa::Response::Wrapper.new(response) # wrap Sawyer::Response in Ohanakapa wrapper
+      @last_response = response = agent.call(method, URI.encode(path), data, options)
+      response.data
     end
+
+    # Executes the request, checking if it was successful
+    #
+    # @return [Boolean] True on success, false otherwise
+    def boolean_from_response(method, path, options = {})
+      request(method, path, options)
+      @last_response.status == 204
+    rescue Ohanakapa::NotFound
+      false
+    end
+
 
     def sawyer_options
       opts = {

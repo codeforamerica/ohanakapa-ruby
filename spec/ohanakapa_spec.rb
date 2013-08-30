@@ -1,9 +1,10 @@
 require 'spec_helper'
+
 describe Ohanakapa do
- 
 	before do
     Ohanakapa.reset!
   end
+
   after do
     Ohanakapa.reset!
   end
@@ -29,7 +30,7 @@ describe Ohanakapa do
       expect(client).to_not eq client_two
       expect(client_three).to eq client_two
     end
-  end # .client
+  end
 
   describe ".configure" do
     Ohanakapa::Configurable.keys.each do |key|
@@ -40,6 +41,6 @@ describe Ohanakapa do
         expect(Ohanakapa.instance_variable_get(:"@#{key}")).to eq key
       end
     end
-  end # .configure
+  end
 
 end

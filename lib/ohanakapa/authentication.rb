@@ -1,18 +1,24 @@
 module Ohanakapa
+
+  # Authentication methods for {Ohanakapa::Client}
   module Authentication
 
-=begin
-    def unauthed_rate_limited?
-      api_token
+    # Indicates if the client has Application
+    # api_token credentials to make anonymous
+    # requests at a higher rate limit
+    #
+    # @see http://ohanapi.herokuapp.com/api/docs
+    # @return Boolean
+    def application_authenticated?
+      !!application_authentication
     end
 
-    def unauthed_rate_limit_params
-      { :api_token => api_token }
-    end
-=end
+    private
 
-    def api_token_authenticated?
-    	!!@api_token
+    def application_authentication
+      if @api_token
+        { :api_token => @api_token }
+      end
     end
 
   end

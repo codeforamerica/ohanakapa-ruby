@@ -7,16 +7,13 @@ module Ohanakapa
   module Default
 
     # Default API endpoint
-    API_ENDPOINT = "http://ohanapi.herokuapp.com/api".freeze
+    API_ENDPOINT = "http://ohanapi-staging.herokuapp.com/api".freeze
 
     # Default User Agent header string
     USER_AGENT   = "Ohanakapa Ruby Gem #{Ohanakapa::VERSION}".freeze
 
     # Default media type
-    MEDIA_TYPE   = "application/vnd.ohanakapa.alpha+json"
-
-    # Default WEB endpoint
-    WEB_ENDPOINT = "http://ohanapi.herokuapp.com".freeze
+    MEDIA_TYPE   = "application/vnd.ohanapi-v1+json"
 
     # Default Faraday middleware stack
     MIDDLEWARE = Faraday::Builder.new do |builder|
@@ -35,7 +32,7 @@ module Ohanakapa
       # Default API endpoint from ENV or {API_ENDPOINT}
       # @return [String]
       def api_endpoint
-        ENV['OHANA_API_ENDPOINT'] || API_ENDPOINT
+        ENV['OHANAKAPA_API_ENDPOINT'] || API_ENDPOINT
       end
 
       # Default pagination preference from ENV
@@ -68,14 +65,6 @@ module Ohanakapa
         MIDDLEWARE
       end
 
-      # Default pagination page size from ENV
-      # @return [Fixnum] Page size
-      def per_page
-        page_size = ENV['OHANAKAPA_PER_PAGE']
-
-        page_size.to_i if page_size
-      end
-
       # Default proxy server URI for Faraday connection from ENV
       # @return [String]
       def proxy
@@ -92,12 +81,6 @@ module Ohanakapa
       # @return [String]
       def user_agent
         ENV['OHANAKAPA_USER_AGENT'] || USER_AGENT
-      end
-
-      # Default web endpoint from ENV or {WEB_ENDPOINT}
-      # @return [String]
-      def web_endpoint
-        ENV['OHANAKAPA_WEB_ENDPOINT'] || WEB_ENDPOINT
       end
 
     end
