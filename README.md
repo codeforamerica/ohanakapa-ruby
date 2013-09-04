@@ -186,8 +186,6 @@ root = Ohanakapa.root
 root.rels[:repository].get :uri => {:owner => "ohanakapa", :repo => "ohanakapa.rb" }
 ```
 
-Ohanakapa 3.0 aims to be hypermedia-driven, removing the internal URL
-construction currently used throughout the client.
 
 [hypermedia]: http://en.wikipedia.org/wiki/Hypermedia
 [Sawyer]: https://github.com/lostisland/sawyer
@@ -214,7 +212,7 @@ Ohanakapa.middleware = stack
 Ohanakapa.location '521d33741974fcdb2b0022ab'
 ```
 ```
-I, [2013-08-29T23:37:58.314434 #26983]  INFO -- : get http://ohanapi-staging.herokuapp.com/api/locations/521d33741974fcdb2b0022ab
+I, [2013-08-29T23:37:58.314434 #26983]  INFO -- : get http://ohanapi.herokuapp.com/api/locations/521d33741974fcdb2b0022ab
 D, [2013-08-29T23:37:58.314535 #26983] DEBUG -- request: Accept: "application/vnd.ohanapi-v1+json"
 User-Agent: "Ohanakapa Ruby Gem 1.0.0"
 I, [2013-08-29T23:37:58.706479 #26983]  INFO -- Status: 200
