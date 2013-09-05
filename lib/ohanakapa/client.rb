@@ -5,6 +5,7 @@ require 'ohanakapa/authentication'
 require 'ohanakapa/rate_limit'
 require 'ohanakapa/client/organizations'
 require 'ohanakapa/client/locations'
+require 'ohanakapa/client/categories'
 require 'ohanakapa/client/search'
 require 'ohanakapa/client/rate_limit'
 
@@ -15,6 +16,7 @@ module Ohanakapa
     include Ohanakapa::Configurable
     include Ohanakapa::Client::Organizations
     include Ohanakapa::Client::Locations
+    include Ohanakapa::Client::Categories
     include Ohanakapa::Client::Search
     include Ohanakapa::Client::RateLimit
 
