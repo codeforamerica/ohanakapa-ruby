@@ -80,7 +80,7 @@ def json_response(file)
 end
 
 def ohana_url(url)
-  url =~ /^http/ ? url : "http://ohanapi-staging.herokuapp.com/api#{url}"
+  url =~ /^http/ ? url : "http://ohanapi.herokuapp.com/api#{url}"
 end
 
 def api_token_client

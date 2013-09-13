@@ -8,7 +8,7 @@ module Ohanakapa
     # requests at a higher rate limit
     #
     # @see http://ohanapi.herokuapp.com/api/docs
-    # @return Boolean
+    # @return [Boolean]
     def application_authenticated?
       !!application_authentication
     end

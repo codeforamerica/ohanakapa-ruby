@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Anselm Bradford", "Moncef Belyamani"]
   spec.description   = %q{A Ruby wrapper for the Ohana API.}
   spec.email         = ["ohana@codeforamerica.org"]
-  spec.files         = %w(CONTRIBUTING.md LICENSE.md README.md Rakefile ohanakapa.gemspec)
+  spec.files         = %w(LICENSE.md README.md Rakefile ohanakapa.gemspec)
   spec.files         = Dir.glob("lib/**/*.rb")
   spec.files         += Dir.glob("spec/**/*")
   spec.homepage      = "https://github.com/codeforamerica/ohanakapa"

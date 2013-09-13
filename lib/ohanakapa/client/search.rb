@@ -1,5 +1,9 @@
 module Ohanakapa
   class Client
+
+    # Methods for the Search API
+    #
+    # @see http://ohanapi.herokuapp.com/api/docs#!/api/GET-api-search---format-_get_11
     module Search
 
       # Performs a query of the API

@@ -1,6 +1,8 @@
 # Ohanakapa
 
-A ruby wrapper for the [Ohana API](https://github.com/codeforamerica/ohana-api)
+A ruby wrapper for the [Ohana API][]
+
+[Ohana API]:https://github.com/codeforamerica/ohana-api
 
 ## Quick start
 

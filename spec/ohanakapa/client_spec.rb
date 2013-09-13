@@ -143,7 +143,7 @@ describe Ohanakapa::Client do
     end
     it "handles query params" do
       Ohanakapa.get "", :foo => "bar"
-      assert_requested :get, "http://ohanapi-staging.herokuapp.com/api?foo=bar"
+      assert_requested :get, "http://ohanapi.herokuapp.com/api?foo=bar"
     end
     it "handles headers" do
       request = stub_get("/search").
@@ -157,7 +157,7 @@ describe Ohanakapa::Client do
     it "handles query params" do
       Ohanakapa.reset!
       Ohanakapa.head "", :foo => "bar"
-      assert_requested :head, "http://ohanapi-staging.herokuapp.com/api?foo=bar"
+      assert_requested :head, "http://ohanapi.herokuapp.com/api?foo=bar"
     end
     it "handles headers" do
       Ohanakapa.reset!
@@ -267,7 +267,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('boom')
       rescue Ohanakapa::UnprocessableEntity => e
         expect(e.message).to include \
-          "GET http://ohanapi-staging.herokuapp.com/api/boom: 422 - No location found"
+          "GET http://ohanapi.herokuapp.com/api/boom: 422 - No location found"
       end
     end
 
@@ -283,7 +283,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('search?foo=bar')
       rescue Ohanakapa::BadRequest => e
         expect(e.message).to include \
-          "GET http://ohanapi-staging.herokuapp.com/api/search?foo=bar: 400 - Required parameters are missing."
+          "GET http://ohanapi.herokuapp.com/api/search?foo=bar: 400 - Required parameters are missing."
       end
     end
 
@@ -299,7 +299,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('search?foo=bar')
       rescue Ohanakapa::BadRequest => e
         expect(e.message).to include \
-          "GET http://ohanapi-staging.herokuapp.com/api/search?foo=bar: 400 - Error: bad request"
+          "GET http://ohanapi.herokuapp.com/api/search?foo=bar: 400 - Error: bad request"
       end
     end
 
@@ -315,7 +315,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('boom')
       rescue Ohanakapa::UnprocessableEntity => e
         expect(e.message).to include \
-          "GET http://ohanapi-staging.herokuapp.com/api/boom: 422 - No location found"
+          "GET http://ohanapi.herokuapp.com/api/boom: 422 - No location found"
       end
     end
 
@@ -338,7 +338,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('boom')
       rescue Ohanakapa::UnprocessableEntity => e
         expect(e.message).to include \
-          "GET http://ohanapi-staging.herokuapp.com/api/boom: 422 - Validation Failed"
+          "GET http://ohanapi.herokuapp.com/api/boom: 422 - Validation Failed"
         expect(e.message).to include "  resource: Issue"
         expect(e.message).to include "  field: title"
         expect(e.message).to include "  code: missing_field"

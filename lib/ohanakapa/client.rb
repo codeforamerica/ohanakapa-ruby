@@ -10,6 +10,10 @@ require 'ohanakapa/client/search'
 require 'ohanakapa/client/rate_limit'
 
 module Ohanakapa
+
+  # Client for the Ohana API
+  #
+  # @see http://ohanapi.herokuapp.com/api/docs
   class Client
 
     include Ohanakapa::Authentication
