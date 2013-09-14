@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+echo "===> Bundling..."
+script/bootstrap --quiet
+
+if [[ -z "$OHANAKAPA_TEST_API_TOKEN" ]]; then
+    echo "Please export OHANAKAPA_TEST_API_TOKEN"
+    exit 1;
+fi
+
+echo "===> Running specs..."
+bundle exec rspec-queue spec

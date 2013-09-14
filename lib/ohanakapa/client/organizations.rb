@@ -1,45 +1,40 @@
 module Ohanakapa
   class Client
+
+    # Methods for the Organizations API
+    #
+    # @see http://ohanapi.herokuapp.com/api/docs
     module Organizations
 
-      # Get all organizations
+      # List all organizations
       #
-      # @return [Hashie::Mash] Hash representing all organizations in database.
+      # This provides a dump of every organization, in the order that they
+      # were uploaded to the Ohana DB.
+      #
+      # @see http://ohanapi.herokuapp.com/api/docs#!/api/GET-api-organizations---format-_get_0
+      #
+      # @return [Array<Sawyer::Resource>] List of Organizations.
+      #
       # @example
       #   Ohanakapa.organizations
       # @example
       #   Ohanakapa.orgs
-      def organizations(params={:page=>1})
-        
-        query = get("organizations?",params)
-
-        pagination = query[:pagination]
-        @pagination = Ohanakapa::Pagination.new( pagination[:current], pagination[:per_page] , pagination[:count] )
-        Ohanakapa::Response.new(query.response,@pagination)
+      def organizations
+        get "organizations"
       end
       alias :orgs :organizations
 
-      # Get a organization based on its ID
+      # Get a single organization based on its ID
+      # @see http://ohanapi.herokuapp.com/api/docs#!/api/GET-api-organizations--id---format-_get_1
       #
       # @param id [String] Organization ID.
-      # @return [Hashie::Mash] Hash representing organization details.
+      # @return [Sawyer::Resource]
       # @example
       #   Ohanakapa.organization('519c44065634241897000023')
       # @example
       #   Ohanakapa.org('519c44065634241897000023')
       def organization(id)
-        query = get("organizations/#{id}")
-        error = query.error
-
-        if error.nil?
-          response = Ohanakapa::Response.new(query.response)
-          return response
-        elsif error == "not_found"
-          raise Ohanakapa::NotFound
-        elsif error == "bad_request"
-          raise Ohanakapa::BadRequest
-        end
-
+        get("organizations/#{id}")
       end
       alias :org :organization
 

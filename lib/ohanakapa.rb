@@ -1,27 +1,33 @@
-require 'ohanakapa/configuration'
-require 'ohanakapa/error'
 require 'ohanakapa/client'
+require 'ohanakapa/default'
 
+# Ruby toolkit for the Ohana API
 module Ohanakapa
-	extend Configuration
-		class << self
 
-		# Alias for Ohanakapa::Client.new
-		#
-		# @return [Ohanakapa::Client]
-		def new(options={})
-			Ohanakapa::Client.new(options)
-		end
+	class << self
+    include Ohanakapa::Configurable
 
-		# Delegate to Ohanakapa::Client.new
-	    def method_missing(method, *args, &block)
-	      return super unless new.respond_to?(method)
-	      new.send(method, *args, &block)
-	    end
+	  # API client based on configured options {Configurable}
+    #
+    # @return [Ohanakapa::Client] API wrapper
+    def client
+      @client = Ohanakapa::Client.new(options) unless defined?(@client) && @client.same_options?(options)
+      @client
+    end
 
-	    def respond_to?(method, include_private=false)
-	      new.respond_to?(method, include_private) || super(method, include_private)
-	    end
+    # @private
+    def respond_to_missing?(method_name, include_private=false); client.respond_to?(method_name, include_private); end if RUBY_VERSION >= "1.9"
+    # @private
+    def respond_to?(method_name, include_private=false); client.respond_to?(method_name, include_private) || super; end if RUBY_VERSION < "1.9"
+
+  	private
+
+    def method_missing(method_name, *args, &block)
+      return super unless client.respond_to?(method_name)
+      client.send(method_name, *args, &block)
+    end
 
 	end
 end
+
+Ohanakapa.setup
