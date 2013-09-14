@@ -57,7 +57,7 @@ module Ohanakapa
       # @option options [String] :kind
       # @return [Sawyer::Resource]
       # @example
-      #   Ohanakapa.location("521d33a01974fcdb2b0036a9", :kind => "entertainment")
+      #   Ohanakapa.update_location("521d33a01974fcdb2b0036a9", :kind => "entertainment")
       def update_location(id, options)
         put "locations/#{id}", :query => options
       end
