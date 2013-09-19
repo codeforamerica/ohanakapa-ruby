@@ -14,6 +14,9 @@ Install via Rubygems
 
     gem "ohanakapa", "~> 1.0"
 
+## Example app
+Prefer to learn from live implementations? We built a [website](http://smc-connect.org) that consumes the Ohana API via this wrapper. The code is open source in this [repo](https://github.com/codeforamerica/human_services_finder).
+
 ### Making requests
 
 API methods are available as module methods (consuming module-level
@@ -21,8 +24,10 @@ configuration) or as client instance methods.
 
 ```ruby
 # Provide an API Token
+A token will automatically be generated for you when you [register an Ohana API app](http://ohanapi.herokuapp.com).
+
 Ohanakapa.configure do |c|
-  c.api_token = '1asdf34526'
+  c.api_token = 'your_token'
 end
 
 # Fetch all locations
@@ -32,7 +37,7 @@ or
 
 ```ruby
 # Provide an API Token
-client = Ohanakapa::Client.new :api_token => '1asdf34526'
+client = Ohanakapa::Client.new :api_token => 'your_token'
 # Fetch all locations
 client.locations
 ```
@@ -48,15 +53,27 @@ location = Ohanakapa.location '521d33741974fcdb2b0022b3'
 puts location.name
 # => "Center on Homelessness"
 puts location.fields
-# => <Set: {:id, :accessibility, :ask_for, :coordinates, :description, :emails, :faxes, :hours, :name, :phones, :short_desc, :transportation, :urls, :address, :mail_address, :contacts, :updated_at, :organization, :services, :url, :other_locations}>
+# => <Set: {:id, :accessibility, :address, :ask_for, :contacts, :coordinates, :description, :emails, :faxes, :languages, :mail_address, :name, :phones, :short_desc, :transportation, :updated_at, :urls, :url, :services, :organization, :other_locations}>
 puts location[:address]
 # => {
+street: "472 Harbor Blvd.",
 city: "Belmont",
 state: "CA",
-street: "472 Harbor Blvd.",
 zip: "94002"
 }
 ```
+## Searching
+```ruby
+# Search for food in ZIP code 94403
+Ohanakapa.search("search", :keyword => "food", :location => "94403")
+
+# Find all parks in the database
+Ohanakapa.search("search", :kind => "Parks")
+
+# Find all farmers' markets that participate in Market Match
+Ohanakapa.search("search", :kind => "Farmers' Markets", :market_match => "1")
+```
+See the [API search docs](http://ohanapi.herokuapp.com/api/docs#!/api/GET-api-search---format-_get_11) for all the possible parameters.
 
 **Note:** URL fields are culled into a separate `.rels` collection for easier
 [Hypermedia](#hypermedia-agent) support.
@@ -75,10 +92,12 @@ need access to the raw HTTP response headers. You can access the last HTTP
 response with `Client#last_response`:
 
 ```ruby
-location  = Ohanakapa.location '521d32b91974fcdb2b000002'
-response  = Ohanakapa.last_response
-etag      = response.headers[:etag]
+location    = Ohanakapa.location '521d32b91974fcdb2b000002'
+response    = Ohanakapa.last_response
+etag        = response.headers[:etag]
+total_count = response.headers["X-Total-Count"]
 ```
+See the [API docs](http://ohanapi.herokuapp.com/api/docs) for a full list of custom response headers.
 
 ## Authentication
 
@@ -89,7 +108,7 @@ API:
 
 Ohanakapa supports application-only authentication using API Token application client
 credentials. Using application credentials will result in making API calls on behalf of an application in order to take advantage of
-the higher rate limit.
+the higher [rate limit](http://ohanapi.herokuapp.com/api/docs#!/api/GET-api-rate_limit---format-_get_12).
 
 ```ruby
 client = Ohanakapa::Client.new(:api_token => "<your 32 char token>")
@@ -104,36 +123,6 @@ instance, Ohanakapa's configuration API allows you to set your configuration
 options at the module level. This is particularly handy if you're creating a
 number of client instances based on some shared defaults.
 
-### Configuring module defaults
-
-Every writable attribute in {Ohanakapa::Configurable} can be set one at a time:
-
-```ruby
-Ohanakapa.api_endpoint = 'http://api.ohana.dev'
-Ohanakapa.web_endpoint = 'http://ohana.dev'
-```
-
-or in batch:
-
-```ruby
-Ohanakapa.configure do |c|
-  c.api_endpoint = 'http://api.ohana.dev'
-  c.web_endpoint = 'http://ohana.dev'
-end
-```
-
-### Using ENV variables
-
-Default configuration values are specified in {Ohanakapa::Default}. Many
-attributes will look for a default value from the ENV before returning
-Ohanakapa's default.
-
-```ruby
-# Given $OHANAKAPA_API_ENDPOINT is "http://api.ohana.dev"
-Ohanakapa.api_endpoint
-
-# => "http://api.ohana.dev"
-```
 
 ## Hypermedia agent
 
@@ -161,38 +150,10 @@ locations.last.name
 When processing API responses, all `*_url` attributes are culled in to the link
 relations collection. Any `url` attribute becomes `.rels[:self]`.
 
-### URI templates
-
-You might notice many link relations have variable placeholders. Ohanakapa
-supports [URI Templates][uri-templates] for parameterized URI expansion:
-
-```ruby
-org = Ohanakapa.organization '521d33741974fcdb2b002289'
-rel = org.rels[:locations]
-# => #<Sawyer::Relation: locations: get http://ohanapi.herokuapp.com/api/organizations/521d33741974fcdb2b002289/locations>
-
-# Get a page of locations
-org.rels[:locations].get.data
-
-# Get issue #2
-repo.rels[:issues].get(:uri => {:number => 2}).data
-```
-
-### The Full Hypermedia Experience™
-
-If you want to use Ohanakapa as a pure hypermedia API client, you can start at
-the API root and and follow link relations from there:
-
-```ruby
-root = Ohanakapa.root
-root.rels[:repository].get :uri => {:owner => "ohanakapa", :repo => "ohanakapa.rb" }
-```
-
 
 [hypermedia]: http://en.wikipedia.org/wiki/Hypermedia
 [Sawyer]: https://github.com/lostisland/sawyer
 [Faraday]: https://github.com/lostisland/faraday
-[uri-templates]: http://tools.ietf.org/html/rfc6570
 
 ## Advanced usage
 
@@ -284,7 +245,7 @@ console`, etc.  ensures your dependencies are up-to-date.
 Ohanakapa uses [VCR][] for recording and playing back API fixtures during test
 runs. These fixtures are part of the Git project in the `spec/cassettes`
 folder. For the most part, tests use an authenticated client, using a token
-stored in `ENV['OHANAKAPA_TEST_API_TOKEN']`. If you're not recording new
+stored in `ENV['OHANAKAPA_TEST_API_TOKEN']` (use the token from your registered app, or create a new app.) If you're not recording new
 cassettes, you don't need to have this set. If you do need to record new
 cassettes, this token can be any Ohana API token because the test suite strips
 the actual token from the cassette output before storing to disk.
