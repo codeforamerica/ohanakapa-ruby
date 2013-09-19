@@ -24,8 +24,6 @@ configuration) or as client instance methods.
 
 ```ruby
 # Provide an API Token
-A token will automatically be generated for you when you [register an Ohana API app](http://ohanapi.herokuapp.com).
-
 Ohanakapa.configure do |c|
   c.api_token = 'your_token'
 end
@@ -41,6 +39,7 @@ client = Ohanakapa::Client.new :api_token => 'your_token'
 # Fetch all locations
 client.locations
 ```
+A token will automatically be generated for you when you [register an Ohana API app](http://ohanapi.herokuapp.com).
 
 ### Consuming resources
 
