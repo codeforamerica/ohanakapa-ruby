@@ -32,7 +32,7 @@ module Ohanakapa
       # Default API endpoint from ENV or {API_ENDPOINT}
       # @return [String]
       def api_endpoint
-        ENV['OHANAKAPA_API_ENDPOINT'] || API_ENDPOINT
+        ENV['OHANA_API_ENDPOINT'] || API_ENDPOINT
       end
 
       # Default pagination preference from ENV
