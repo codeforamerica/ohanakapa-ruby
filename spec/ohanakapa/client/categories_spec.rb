@@ -20,7 +20,7 @@ describe Ohanakapa::Client::Categories do
       cat_ids = ['52280f5c1edd37edff000001', '52280f5c1edd37edff000003']
       service = @client.replace_all_categories(service_id, cat_ids)
       expect(service.name).to match /CalFresh Application Assistance/
-      assert_requested :put, ohana_url("/services/#{service_id}/categories?api_token=5f996ce5c431a14c99419116a50a6b62&category_ids%5B0%5D=52280f5c1edd37edff000001&category_ids%5B1%5D=52280f5c1edd37edff000003")
+      assert_requested :put, ohana_url("/services/#{service_id}/categories?api_token=#{test_api_token}&category_ids%5B0%5D=52280f5c1edd37edff000001&category_ids%5B1%5D=52280f5c1edd37edff000003")
     end
   end # .replace_all_categories
 

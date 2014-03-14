@@ -34,7 +34,7 @@ describe Ohanakapa::Client::Locations do
     it "updates a location's attributes" do
       location = @client.update_location("521d33a01974fcdb2b0036a9", :kind => "entertainment")
       expect(location.kind).to eq "Entertainment"
-      assert_requested :put, ohana_url("/locations/#{location.id}?api_token=5f996ce5c431a14c99419116a50a6b62&kind=entertainment")
+      assert_requested :put, ohana_url("/locations/#{location.id}?api_token=#{test_api_token}&kind=entertainment")
     end
   end # .update_location
 

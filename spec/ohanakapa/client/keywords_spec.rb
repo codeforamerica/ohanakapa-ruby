@@ -13,7 +13,7 @@ describe Ohanakapa::Client::Categories do
       keywords = ['apitest', 'sandbox']
       service = @client.add_keywords_to_a_service(service_id, keywords)
       expect(service.name).to match /CalFresh Application Assistance/
-      assert_requested :post, ohana_url("/services/#{service_id}/keywords?api_token=5f996ce5c431a14c99419116a50a6b62&keywords%5B0%5D=apitest&keywords%5B1%5D=sandbox")
+      assert_requested :post, ohana_url("/services/#{service_id}/keywords?api_token=#{test_api_token}&keywords%5B0%5D=apitest&keywords%5B1%5D=sandbox")
     end
   end # .add_keywords_to_a_service
 
