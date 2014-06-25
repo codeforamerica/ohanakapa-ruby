@@ -24,7 +24,7 @@ module Ohanakapa
                     end
                   when 404 then Ohanakapa::NotFound
                   when 406 then Ohanakapa::NotAcceptable
-                  #when 422 then Ohanakapa::UnprocessableEntity
+                  when 422 then Ohanakapa::UnprocessableEntity
                   when 500 then Ohanakapa::InternalServerError
                   when 501 then Ohanakapa::NotImplemented
                   when 502 then Ohanakapa::BadGateway

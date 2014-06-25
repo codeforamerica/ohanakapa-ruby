@@ -255,7 +255,7 @@ describe Ohanakapa::Client do
       expect { Ohanakapa.get('boom') }.to raise_error Ohanakapa::InternalServerError
     end
 
-    xit "includes a message" do
+    it "includes a message" do
       stub_get('/boom').
         to_return \
         :status => 422,
@@ -303,7 +303,7 @@ describe Ohanakapa::Client do
       end
     end
 
-    xit "includes an error" do
+    it "includes an error" do
       stub_get('/boom').
         to_return \
         :status => 422,
@@ -315,11 +315,11 @@ describe Ohanakapa::Client do
         Ohanakapa.get('boom')
       rescue Ohanakapa::UnprocessableEntity => e
         expect(e.message).to include \
-          "GET http://ohanapi.herokuapp.com/api/boom: 422 - No location found"
+          "GET http://ohanapi.herokuapp.com/api/boom: 422 - Error: No location found"
       end
     end
 
-    xit "includes an error summary" do
+    it "includes an error summary" do
       stub_get('/boom').
         to_return \
         :status => 422,
