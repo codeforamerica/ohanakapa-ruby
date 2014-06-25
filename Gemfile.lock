@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ohanakapa (1.0.0)
+    ohanakapa (1.1.0)
       sawyer (~> 0.3.0)
 
 GEM
