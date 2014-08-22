@@ -165,7 +165,7 @@ Often, it helps to know what Ohanakapa is doing under the hood. Faraday makes it
 easy to peek into the underlying HTTP traffic:
 
 ```ruby
-stack = Faraday::Builder.new do |builder|
+stack = Faraday::RackBuilder.new do |builder|
   builder.response :logger
   builder.use Ohanakapa::Response::RaiseError
   builder.adapter Faraday.default_adapter
@@ -205,11 +205,15 @@ Add the gem to your Gemfile
 
     gem 'faraday-http-cache'
 
-Next, construct your own Faraday middleware:
+Next, construct your own Faraday middleware. The example below assumes you are
+using Memcache via `:dalli_store`:
 
 ```ruby
-stack = Faraday::Builder.new do |builder|
-  builder.use Faraday::HttpCache
+# config/initializers/ohanakapa.rb
+cache_store = ActiveSupport::Cache.lookup_store(:dalli_store)
+
+stack = Faraday::RackBuilder.new do |builder|
+  builder.use Faraday::HttpCache, store: cache_store
   builder.use Ohanakapa::Response::RaiseError
   builder.adapter Faraday.default_adapter
 end

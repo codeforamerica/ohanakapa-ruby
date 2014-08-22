@@ -19,7 +19,7 @@ module Ohanakapa
     #   @return [String] GitHub username for Basic Authentication
     # @!attribute middleware
     #   @see https://github.com/lostisland/faraday
-    #   @return [Faraday::Builder] Configure middleware for Faraday
+    #   @return [Faraday::Builder or Faraday::RackBuilder] Configure middleware for Faraday
     # @!attribute per_page
     #   @return [String] Configure page size for paginated results. API default: 30
     # @!attribute proxy

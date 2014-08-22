@@ -15,8 +15,11 @@ module Ohanakapa
     # Default media type
     MEDIA_TYPE   = "application/vnd.ohanapi-v1+json"
 
+    # In Faraday 0.9, Faraday::Builder was renamed to Faraday::RackBuilder
+    RACK_BUILDER_CLASS = defined?(Faraday::RackBuilder) ? Faraday::RackBuilder : Faraday::Builder
+
     # Default Faraday middleware stack
-    MIDDLEWARE = Faraday::Builder.new do |builder|
+    MIDDLEWARE = RACK_BUILDER_CLASS.new do |builder|
       builder.use Ohanakapa::Response::RaiseError
       builder.adapter Faraday.default_adapter
     end
