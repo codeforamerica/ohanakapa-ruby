@@ -16,25 +16,26 @@ describe Ohanakapa::Client::Locations do
 
   describe ".location", :vcr do
     it "returns an location" do
-      loc = Ohanakapa.location("521d32dc1974fcdb2b0008fa")
-      expect(loc.name).to eq "Mycological Society of San Francisco (MSSF)"
+      loc = Ohanakapa.location("1")
+      expect(loc.name).to eq "San Mateo Example Location"
     end
   end # .location
 
   describe ".nearby", :vcr do
     it "returns locations near the queried location" do
-      nearbys = Ohanakapa.nearby("521d32dc1974fcdb2b0008fa")
-      assert_requested :get, ohana_url("/locations/521d32dc1974fcdb2b0008fa/nearby")
+      nearbys = Ohanakapa.nearby("2")
+      assert_requested :get, ohana_url("/locations/2/nearby")
       expect(nearbys).to be_kind_of Array
-      expect(nearbys.first.name).to eq "Golden Gate Model Railroad Club"
+      expect(nearbys.first.name).to eq "Fair Oaks Branch"
     end
   end # .nearby
 
   describe ".update_location", :vcr do
     it "updates a location's attributes" do
-      location = @client.update_location("521d33a01974fcdb2b0036a9", :kind => "entertainment")
-      expect(location.kind).to eq "Entertainment"
-      assert_requested :put, ohana_url("/locations/#{location.id}?api_token=#{test_api_token}&kind=entertainment")
+      location = @client.update_location("2",
+        hours: "Monday-Thursday, 10-7; Friday, 10-6")
+      expect(location.hours).to eq "Monday-Thursday, 10-7; Friday, 10-6"
+      assert_requested :put, ohana_url("/locations/#{location.id}?api_token=#{test_api_token}&hours=Monday-Thursday, 10-7; Friday, 10-6")
     end
   end # .update_location
 

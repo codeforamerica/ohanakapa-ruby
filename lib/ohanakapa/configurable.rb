@@ -4,7 +4,7 @@ module Ohanakapa
   # in {Default}
   module Configurable
     # @!attribute api_endpoint
-    #   @return [String] Base URL for API requests. default: http://ohanapi.herokuapp.com/api/
+    #   @return [String] Base URL for API requests. default: http://ohana-api-demo.herokuapp.com/api
     # @!attribute auto_paginate
     #   @return [Boolean] Auto fetch next page of results until rate limit reached
     # @!attribute [w] api_token
@@ -15,8 +15,6 @@ module Ohanakapa
     # @!attribute connection_options
     #   @see https://github.com/lostisland/faraday
     #   @return [Hash] Configure connection options for Faraday
-    # @!attribute login
-    #   @return [String] GitHub username for Basic Authentication
     # @!attribute middleware
     #   @see https://github.com/lostisland/faraday
     #   @return [Faraday::Builder or Faraday::RackBuilder] Configure middleware for Faraday
@@ -28,10 +26,10 @@ module Ohanakapa
     # @!attribute user_agent
     #   @return [String] Configure User-Agent header for requests.
 
-    attr_accessor :api_endpoint, :auto_paginate, :connection_options,
-                  :default_media_type, :middleware, :proxy,
+    attr_accessor :auto_paginate, :connection_options,
+                  :default_media_type, :middleware, :per_page, :proxy,
                   :user_agent
-    attr_writer :api_token
+    attr_writer :api_endpoint, :api_token
 
     class << self
 
@@ -45,6 +43,7 @@ module Ohanakapa
           :connection_options,
           :default_media_type,
           :middleware,
+          :per_page,
           :proxy,
           :user_agent
         ]

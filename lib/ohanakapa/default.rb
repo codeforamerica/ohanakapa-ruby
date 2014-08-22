@@ -7,7 +7,7 @@ module Ohanakapa
   module Default
 
     # Default API endpoint
-    API_ENDPOINT = "http://ohanapi.herokuapp.com/api".freeze
+    API_ENDPOINT = "http://ohana-api-demo.herokuapp.com/api".freeze
 
     # Default User Agent header string
     USER_AGENT   = "Ohanakapa Ruby Gem #{Ohanakapa::VERSION}".freeze
@@ -42,6 +42,14 @@ module Ohanakapa
       # @return [String]
       def auto_paginate
         ENV['OHANAKAPA_AUTO_PAGINATE']
+      end
+
+      # Default pagination page size from ENV
+      # @return [Fixnum] Page size
+      def per_page
+        page_size = ENV['OCTOKIT_PER_PAGE']
+
+        page_size.to_i if page_size
       end
 
       # Default options for Faraday::Connection

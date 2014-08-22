@@ -16,8 +16,8 @@ describe Ohanakapa::Client::Organizations do
 
   describe ".organization", :vcr do
     it "returns an organization" do
-      org = Ohanakapa.organization("521d32dc1974fcdb2b0008f9")
-      expect(org.name).to eq "Mycological Society of San Francisco (MSSF)"
+      org = Ohanakapa.organization("1")
+      expect(org.name).to eq "San Mateo Example Agency"
     end
   end # .organization
 end

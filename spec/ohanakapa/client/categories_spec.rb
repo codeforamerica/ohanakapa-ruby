@@ -16,11 +16,11 @@ describe Ohanakapa::Client::Categories do
 
   describe ".replace_all_categories", :vcr do
     it "replaces all categories for a service" do
-      service_id = "521d339f1974fcdb2b00573e"
-      cat_ids = ['52280f5c1edd37edff000001', '52280f5c1edd37edff000003']
-      service = @client.replace_all_categories(service_id, cat_ids)
-      expect(service.name).to match /CalFresh Application Assistance/
-      assert_requested :put, ohana_url("/services/#{service_id}/categories?api_token=#{test_api_token}&category_ids%5B0%5D=52280f5c1edd37edff000001&category_ids%5B1%5D=52280f5c1edd37edff000003")
+      service_id = "1"
+      oe_ids = ['101', '102']
+      service = @client.replace_all_categories(service_id, oe_ids)
+      expect(service.name).to match /Resume Workshop/
+      assert_requested :put, ohana_url("/services/#{service_id}/categories?api_token=#{test_api_token}&oe_ids%5B0%5D=101&oe_ids%5B1%5D=102")
     end
   end # .replace_all_categories
 

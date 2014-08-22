@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Ohanakapa::Client do
 
   describe ".rate_limit" do
-    it "makes a response if there is no last response" do
+    xit "makes a response if there is no last response" do
       client = Ohanakapa::Client.new
       VCR.use_cassette 'rate_limit' do
         rate = client.rate_limit
@@ -12,7 +12,8 @@ describe Ohanakapa::Client do
         expect(rate.remaining).to be_kind_of Fixnum
       end
     end # .rate_limit
-    it "checks the rate limit from the last response" do
+
+    xit "checks the rate limit from the last response" do
       client = Ohanakapa::Client.new
       VCR.use_cassette 'root' do
         client.get("/api/")
@@ -26,7 +27,7 @@ describe Ohanakapa::Client do
   end
 
   describe ".rate_limit!" do
-    it "makes a web request to check the rate limit" do
+    xit "makes a web request to check the rate limit" do
       client = Ohanakapa::Client.new
       VCR.use_cassette 'rate_limit' do
         rate = client.rate_limit!

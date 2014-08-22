@@ -6,7 +6,6 @@ require 'ohanakapa/rate_limit'
 require 'ohanakapa/client/organizations'
 require 'ohanakapa/client/locations'
 require 'ohanakapa/client/categories'
-require 'ohanakapa/client/keywords'
 require 'ohanakapa/client/search'
 require 'ohanakapa/client/rate_limit'
 
@@ -22,7 +21,6 @@ module Ohanakapa
     include Ohanakapa::Client::Organizations
     include Ohanakapa::Client::Locations
     include Ohanakapa::Client::Categories
-    include Ohanakapa::Client::Keywords
     include Ohanakapa::Client::Search
     include Ohanakapa::Client::RateLimit
 
@@ -119,21 +117,28 @@ module Ohanakapa
     #
     # @param url [String] The path, relative to {#api_endpoint}
     # @param options [Hash] Query and header params for request
+    # @param block [Block] Block to perform the data concatination of the
+    #   multiple requests. The block is called with two parameters, the first
+    #   contains the contents of the requests so far and the second parameter
+    #   contains the latest response.
     # @return [Sawyer::Resource]
-    def paginate(url, options = {})
+    def paginate(url, options = {}, &block)
       opts = parse_query_and_convenience_headers(options.dup)
-      # if @auto_paginate
-      #   opts[:query][:per_page] ||=  @per_page || (@auto_paginate ? 100 : nil)
-      # end
+      if @auto_paginate || @per_page
+        opts[:query][:per_page] ||=  @per_page || (@auto_paginate ? 50 : nil)
+      end
 
       data = request(:get, url, opts)
 
-      if @auto_paginate && data.is_a?(Array)
+      if @auto_paginate
         while @last_response.rels[:next] && rate_limit.remaining > 0
           @last_response = @last_response.rels[:next].get
-          data.concat(@last_response.data) if @last_response.data.is_a?(Array)
+          if block_given?
+            yield(data, @last_response)
+          else
+            data.concat(@last_response.data) if @last_response.data.is_a?(Array)
+          end
         end
-
       end
 
       data

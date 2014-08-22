@@ -3,6 +3,14 @@ require 'json'
 
 describe Ohanakapa::Client do
 
+  before do
+    Ohanakapa.reset!
+  end
+
+  after do
+    Ohanakapa.reset!
+  end
+
   describe "module configuration" do
 
     before do
@@ -29,12 +37,14 @@ describe Ohanakapa::Client do
 
       before do
         @opts = {
-          :connection_options => {:ssl => {:verify => false}}
+          :connection_options => {:ssl => {:verify => false}},
+          :per_page => 40
         }
       end
 
       it "overrides module configuration" do
         client = Ohanakapa::Client.new(@opts)
+        expect(client.per_page).to eq(40)
         expect(client.auto_paginate).to eq Ohanakapa.auto_paginate
       end
 
@@ -45,6 +55,7 @@ describe Ohanakapa::Client do
             config.send("#{key}=", value)
           end
         end
+        expect(client.per_page).to eq(40)
         expect(client.auto_paginate).to eq Ohanakapa.auto_paginate
       end
 
@@ -67,26 +78,26 @@ describe Ohanakapa::Client do
       before do
         Ohanakapa.reset!
       end
-      it "sets oauth application creds with .configure" do
+      it "sets api_token creds with .configure" do
         Ohanakapa.configure do |config|
           config.api_token     = '97b4937b385eb63d1f46'
         end
         expect(Ohanakapa.client).to be_application_authenticated
       end
-      it "sets oauth application creds with module methods" do
+      it "sets api_token creds with module methods" do
         Ohanakapa.api_token     = '97b4937b385eb63d1f46'
         expect(Ohanakapa.client).to be_application_authenticated
       end
     end
 
     describe "with class level config" do
-      it "sets oauth application creds with .configure" do
+      it "sets api_token creds with .configure" do
         @client.configure do |config|
           config.api_token     = '97b4937b385eb63d1f46'
         end
         expect(@client).to be_application_authenticated
       end
-      it "sets oauth application creds with module methods" do
+      it "sets api_token creds with module methods" do
         @client.api_token     = '97b4937b385eb63d1f46'
         expect(@client).to be_application_authenticated
       end
@@ -121,8 +132,8 @@ describe Ohanakapa::Client do
     it "fetches the API root" do
       Ohanakapa.reset!
       VCR.use_cassette 'root' do
-        root = Ohanakapa.client.root
-        expect(root.rels[:locations].href).to eq "http://ohanapi.herokuapp.com/api/locations"
+        root = Ohanakapa.client.get '/api'
+        expect(root.rels[:locations].href).to eq "http://ohana-api-demo.herokuapp.com/api/locations"
       end
     end
   end
@@ -132,7 +143,7 @@ describe Ohanakapa::Client do
       Ohanakapa.reset!
       client = Ohanakapa.client
       expect(client.last_response).to be_nil
-      client.get ""
+      client.get "/api"
       expect(client.last_response.status).to eq 200
     end
   end # .last_response
@@ -142,8 +153,8 @@ describe Ohanakapa::Client do
       Ohanakapa.reset!
     end
     it "handles query params" do
-      Ohanakapa.get "", :foo => "bar"
-      assert_requested :get, "http://ohanapi.herokuapp.com/api?foo=bar"
+      Ohanakapa.get "/api", :foo => "bar"
+      assert_requested :get, "http://ohana-api-demo.herokuapp.com/api?foo=bar"
     end
     it "handles headers" do
       request = stub_get("/search").
@@ -156,8 +167,8 @@ describe Ohanakapa::Client do
   describe ".head", :vcr do
     it "handles query params" do
       Ohanakapa.reset!
-      Ohanakapa.head "", :foo => "bar"
-      assert_requested :head, "http://ohanapi.herokuapp.com/api?foo=bar"
+      Ohanakapa.head "/api", :foo => "bar"
+      assert_requested :head, "http://ohana-api-demo.herokuapp.com/api?foo=bar"
     end
     it "handles headers" do
       Ohanakapa.reset!
@@ -175,7 +186,7 @@ describe Ohanakapa::Client do
     end
     it "Accepts application/vnd.ohanapi-v1+json by default" do
       VCR.use_cassette 'root' do
-        root_request = stub_get("").
+        root_request = stub_get('').
           with(:headers => {:accept => "application/vnd.ohanapi-v1+json"})
         @client.get ""
         assert_requested root_request
@@ -183,25 +194,25 @@ describe Ohanakapa::Client do
       end
     end
     it "allows Accept'ing another api version" do
-      root_request = stub_get("").
+      root_request = stub_get('').
         with(:headers => {:accept => "application/vnd.ohanapi-v2+json"})
-      @client.get "", :accept => "application/vnd.ohanapi-v2+json"
+      @client.get '', :accept => "application/vnd.ohanapi-v2+json"
       assert_requested root_request
       expect(@client.last_response.status).to eq 200
     end
     it "sets a default user agent" do
-      root_request = stub_get("").
+      root_request = stub_get('').
         with(:headers => {:user_agent => Ohanakapa::Default.user_agent})
-      @client.get ""
+      @client.get ''
       assert_requested root_request
       expect(@client.last_response.status).to eq 200
     end
     it "sets a custom user agent" do
       user_agent = "Mozilla/5.0 CfA Yolo!"
-      root_request = stub_get("").
+      root_request = stub_get('').
         with(:headers => {:user_agent => user_agent})
       client = Ohanakapa::Client.new :user_agent => user_agent
-      client.get ""
+      client.get ''
       assert_requested root_request
       expect(client.last_response.status).to eq 200
     end
@@ -219,6 +230,7 @@ describe Ohanakapa::Client do
       Ohanakapa.reset!
       Ohanakapa.configure do |config|
         config.auto_paginate = true
+        config.per_page = 2
       end
     end
 
@@ -227,10 +239,11 @@ describe Ohanakapa::Client do
     end
 
     it "fetches all the pages" do
-      Ohanakapa.client.paginate('search', :keyword => 'food')
-      assert_requested :get, ohana_url("/search?keyword=food")
+      url = 'search?keyword=food'
+      Ohanakapa.client.paginate(url)
+      assert_requested :get, ohana_url("#{url}&per_page=2")
       (2..4).each do |i|
-        assert_requested :get, ohana_url("/search?keyword=food&page=#{i}")
+        assert_requested :get, ohana_url("#{url}&per_page=2&page=#{i}")
       end
     end
   end
@@ -267,7 +280,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('boom')
       rescue Ohanakapa::UnprocessableEntity => e
         expect(e.message).to include \
-          "GET http://ohanapi.herokuapp.com/api/boom: 422 - No location found"
+          "GET http://ohana-api-demo.herokuapp.com/api/boom: 422 - No location found"
       end
     end
 
@@ -283,7 +296,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('search?foo=bar')
       rescue Ohanakapa::BadRequest => e
         expect(e.message).to include \
-          "GET http://ohanapi.herokuapp.com/api/search?foo=bar: 400 - Required parameters are missing."
+          "GET http://ohana-api-demo.herokuapp.com/api/search?foo=bar: 400 - Required parameters are missing."
       end
     end
 
@@ -299,7 +312,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('search?foo=bar')
       rescue Ohanakapa::BadRequest => e
         expect(e.message).to include \
-          "GET http://ohanapi.herokuapp.com/api/search?foo=bar: 400 - Error: bad request"
+          "GET http://ohana-api-demo.herokuapp.com/api/search?foo=bar: 400 - Error: bad request"
       end
     end
 
@@ -315,7 +328,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('boom')
       rescue Ohanakapa::UnprocessableEntity => e
         expect(e.message).to include \
-          "GET http://ohanapi.herokuapp.com/api/boom: 422 - Error: No location found"
+          "GET http://ohana-api-demo.herokuapp.com/api/boom: 422 - Error: No location found"
       end
     end
 
@@ -338,7 +351,7 @@ describe Ohanakapa::Client do
         Ohanakapa.get('boom')
       rescue Ohanakapa::UnprocessableEntity => e
         expect(e.message).to include \
-          "GET http://ohanapi.herokuapp.com/api/boom: 422 - Validation Failed"
+          "GET http://ohana-api-demo.herokuapp.com/api/boom: 422 - Validation Failed"
         expect(e.message).to include "  resource: Issue"
         expect(e.message).to include "  field: title"
         expect(e.message).to include "  code: missing_field"
@@ -358,6 +371,4 @@ describe Ohanakapa::Client do
       expect { Ohanakapa.get('organizations') }.to raise_error Ohanakapa::TooManyRequests
     end
   end
-
-
 end
