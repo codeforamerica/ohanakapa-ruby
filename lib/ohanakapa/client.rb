@@ -180,7 +180,7 @@ module Ohanakapa
         options[:headers][:accept] = accept
       end
 
-      @last_response = response = agent.call(method, URI.encode(path), data, options)
+      @last_response = response = agent.call(method, URI::Parser.new.escape(path.to_s), data, options)
       response.data
     end
 
