@@ -30,13 +30,11 @@ module Ohanakapa
       # @param cat_ids [Array] An array of category IDs to use as replacement
       # @return [<Sawyer::Resource>] The updated service
       # @see http://ohanapi.herokuapp.com/api/docs
-      # @example Replace categories for service with ID '521d339f1974fcdb2b00573e'
-      #   Ohanakapa.replace_all_categories("521d339f1974fcdb2b00573e", ['52280f5c1edd37edff000001', '52280f5c1edd37edff000003'])
+      # @example Replace categories for service with ID '1'
+      #   Ohanakapa.replace_all_categories("1", ['101', '102'])
       def replace_all_categories(service_id, cat_ids)
-        put "services/#{service_id}/categories", :query => { :category_ids => cat_ids }
+        put "services/#{service_id}/categories", :query => { :oe_ids => cat_ids }
       end
-
-
     end
   end
 end

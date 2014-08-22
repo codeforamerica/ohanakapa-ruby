@@ -39,7 +39,7 @@ client = Ohanakapa::Client.new :api_token => 'your_token'
 # Fetch all locations
 client.locations
 ```
-A token will automatically be generated for you when you [register an Ohana API app](http://ohanapi.herokuapp.com).
+A token will automatically be generated for you when you [register an Ohana API app](http://ohana-api-demo.herokuapp.com).
 
 ### Consuming resources
 
@@ -48,7 +48,7 @@ access for fields returned in the API response.
 
 ```ruby
 # Fetch a location
-location = Ohanakapa.location '521d33741974fcdb2b0022b3'
+location = Ohanakapa.location '1'
 puts location.name
 # => "Center on Homelessness"
 puts location.fields
@@ -79,9 +79,9 @@ See the [API search docs](http://ohanapi.herokuapp.com/api/docs#!/api/GET-api-se
 
 ```ruby
 # Fetch an organization
-org = Ohankapa.organization '521d32b91974fcdb2b000002'
+org = Ohanakapa.organization '2'
 org.rels[:locations].href
-# => "http://ohanapi.herokuapp.com/api/organizations/521d32b91974fcdb2b000002/locations"
+# => "http://ohana-api-demo.herokuapp.com/api/organizations/2/locations"
 ```
 
 ### Accessing HTTP responses
@@ -91,7 +91,7 @@ need access to the raw HTTP response headers. You can access the last HTTP
 response with `Client#last_response`:
 
 ```ruby
-location    = Ohanakapa.location '521d32b91974fcdb2b000002'
+location    = Ohanakapa.location '2'
 response    = Ohanakapa.last_response
 etag        = response.headers[:etag]
 total_count = response.headers["X-Total-Count"]
@@ -112,7 +112,7 @@ the higher [rate limit](http://ohanapi.herokuapp.com/api/docs#!/api/GET-api-rate
 ```ruby
 client = Ohanakapa::Client.new(:api_token => "<your 32 char token>")
 
-location = client.locations '521d32b91974fcdb2b000002'
+location = client.locations '2'
 ```
 
 ## Configuration and defaults
@@ -134,12 +134,12 @@ Resources returned by Ohanakapa methods contain not only data but hypermedia
 link relations:
 
 ```ruby
-org = Ohanakapa.organization '521d32b91974fcdb2b000002'
+org = Ohanakapa.organization '2'
 
 # Get the locations rel, returned from the API
 # as locations_url in the resource
 org.rels[:locations].href
-# => "http://ohanapi.herokuapp.com/api/organizations/521d32b91974fcdb2b000002/locations"
+# => "http://ohana-api-demo.herokuapp.com/api/organizations/2/locations"
 
 locations = org.rels[:locations].get.data
 locations.last.name
@@ -165,16 +165,16 @@ Often, it helps to know what Ohanakapa is doing under the hood. Faraday makes it
 easy to peek into the underlying HTTP traffic:
 
 ```ruby
-stack = Faraday::Builder.new do |builder|
+stack = Faraday::RackBuilder.new do |builder|
   builder.response :logger
   builder.use Ohanakapa::Response::RaiseError
   builder.adapter Faraday.default_adapter
 end
 Ohanakapa.middleware = stack
-Ohanakapa.location '521d33741974fcdb2b0022ab'
+Ohanakapa.location '2'
 ```
 ```
-I, [2013-08-29T23:37:58.314434 #26983]  INFO -- : get http://ohanapi.herokuapp.com/api/locations/521d33741974fcdb2b0022ab
+I, [2013-08-29T23:37:58.314434 #26983]  INFO -- : get http://ohana-api-demo.herokuapp.com/api/locations/2
 D, [2013-08-29T23:37:58.314535 #26983] DEBUG -- request: Accept: "application/vnd.ohanapi-v1+json"
 User-Agent: "Ohanakapa Ruby Gem 1.0.0"
 I, [2013-08-29T23:37:58.706479 #26983]  INFO -- Status: 200
@@ -205,11 +205,15 @@ Add the gem to your Gemfile
 
     gem 'faraday-http-cache'
 
-Next, construct your own Faraday middleware:
+Next, construct your own Faraday middleware. The example below assumes you are
+using Memcache via `:dalli_store`:
 
 ```ruby
-stack = Faraday::Builder.new do |builder|
-  builder.use Faraday::HttpCache
+# config/initializers/ohanakapa.rb
+cache_store = ActiveSupport::Cache.lookup_store(:dalli_store)
+
+stack = Faraday::RackBuilder.new do |builder|
+  builder.use Faraday::HttpCache, store: cache_store
   builder.use Ohanakapa::Response::RaiseError
   builder.adapter Faraday.default_adapter
 end

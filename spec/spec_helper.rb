@@ -15,15 +15,13 @@ require 'webmock/rspec'
 WebMock.disable_net_connect!(:allow => 'coveralls.io')
 
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
+  config.raise_errors_for_deprecations!
 end
 
 require 'vcr'
 VCR.configure do |c|
   c.configure_rspec_metadata!
-  c.filter_sensitive_data("<<API_TOKEN>>") do
-      ENV['OHANAKAPA_TEST_API_TOKEN']
-  end
+
   c.default_cassette_options = {
     :serialize_with             => :json,
     :preserve_exact_body_bytes  => true,
@@ -35,7 +33,7 @@ VCR.configure do |c|
 end
 
 def test_api_token
-  ENV.fetch 'OHANAKAPA_TEST_API_TOKEN'
+  'Ohana-API-Admin-Demo'
 end
 
 def stub_delete(url)
@@ -80,7 +78,13 @@ def json_response(file)
 end
 
 def ohana_url(url)
-  url =~ /^http/ ? url : "http://ohanapi.herokuapp.com/api#{url}"
+  return url if url =~ /^http/
+
+  url = File.join(Ohanakapa.api_endpoint, url)
+  uri = Addressable::URI.parse(url)
+
+  uri.to_s
+  #url =~ /^http/ ? url : "http://ohana-api-demo.herokuapp.com/api#{url}"
 end
 
 def api_token_client

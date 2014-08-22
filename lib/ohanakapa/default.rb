@@ -7,7 +7,7 @@ module Ohanakapa
   module Default
 
     # Default API endpoint
-    API_ENDPOINT = "http://ohanapi.herokuapp.com/api".freeze
+    API_ENDPOINT = "http://ohana-api-demo.herokuapp.com/api".freeze
 
     # Default User Agent header string
     USER_AGENT   = "Ohanakapa Ruby Gem #{Ohanakapa::VERSION}".freeze
@@ -15,8 +15,11 @@ module Ohanakapa
     # Default media type
     MEDIA_TYPE   = "application/vnd.ohanapi-v1+json"
 
+    # In Faraday 0.9, Faraday::Builder was renamed to Faraday::RackBuilder
+    RACK_BUILDER_CLASS = defined?(Faraday::RackBuilder) ? Faraday::RackBuilder : Faraday::Builder
+
     # Default Faraday middleware stack
-    MIDDLEWARE = Faraday::Builder.new do |builder|
+    MIDDLEWARE = RACK_BUILDER_CLASS.new do |builder|
       builder.use Ohanakapa::Response::RaiseError
       builder.adapter Faraday.default_adapter
     end
@@ -39,6 +42,14 @@ module Ohanakapa
       # @return [String]
       def auto_paginate
         ENV['OHANAKAPA_AUTO_PAGINATE']
+      end
+
+      # Default pagination page size from ENV
+      # @return [Fixnum] Page size
+      def per_page
+        page_size = ENV['OCTOKIT_PER_PAGE']
+
+        page_size.to_i if page_size
       end
 
       # Default options for Faraday::Connection
