@@ -2,18 +2,16 @@ require 'ohanakapa/response/raise_error'
 require 'ohanakapa/version'
 
 module Ohanakapa
-
   # Default configuration options for {Client}
   module Default
-
     # Default API endpoint
-    API_ENDPOINT = "http://ohana-api-demo.herokuapp.com/api".freeze
+    API_ENDPOINT = 'https://ohana-api-demo.herokuapp.com/api'.freeze
 
     # Default User Agent header string
     USER_AGENT   = "Ohanakapa Ruby Gem #{Ohanakapa::VERSION}".freeze
 
     # Default media type
-    MEDIA_TYPE   = "application/vnd.ohanapi-v1+json"
+    MEDIA_TYPE   = 'application/vnd.ohanapi-v1+json'
 
     # In Faraday 0.9, Faraday::Builder was renamed to Faraday::RackBuilder
     RACK_BUILDER_CLASS = defined?(Faraday::RackBuilder) ? Faraday::RackBuilder : Faraday::Builder
@@ -25,11 +23,10 @@ module Ohanakapa
     end
 
     class << self
-
       # Configuration options
       # @return [Hash]
       def options
-        Hash[Ohanakapa::Configurable.keys.map{|key| [key, send(key)]}]
+        Hash[Ohanakapa::Configurable.keys.map { |key| [key, send(key)] }]
       end
 
       # Default API endpoint from ENV or {API_ENDPOINT}
@@ -56,9 +53,9 @@ module Ohanakapa
       # @return [Hash]
       def connection_options
         {
-          :headers => {
-            :accept => default_media_type,
-            :user_agent => user_agent
+          headers: {
+            accept: default_media_type,
+            user_agent: user_agent
           }
         }
       end
@@ -93,7 +90,6 @@ module Ohanakapa
       def user_agent
         ENV['OHANAKAPA_USER_AGENT'] || USER_AGENT
       end
-
     end
   end
 end

@@ -12,21 +12,19 @@ require 'ohanakapa'
 require 'rspec'
 require 'webmock/rspec'
 
-WebMock.disable_net_connect!(:allow => 'coveralls.io')
+WebMock.disable_net_connect!(allow: 'coveralls.io')
 
-RSpec.configure do |config|
-  config.raise_errors_for_deprecations!
-end
+RSpec.configure(&:raise_errors_for_deprecations!)
 
 require 'vcr'
 VCR.configure do |c|
   c.configure_rspec_metadata!
 
   c.default_cassette_options = {
-    :serialize_with             => :json,
-    :preserve_exact_body_bytes  => true,
-    :decode_compressed_response => true,
-    :record                     => ENV['TRAVIS'] ? :none : :once
+    serialize_with: :json,
+    preserve_exact_body_bytes: true,
+    decode_compressed_response: true,
+    record: ENV['TRAVIS'] ? :none : :once
   }
   c.cassette_library_dir = 'spec/cassettes'
   c.hook_into :webmock
@@ -61,7 +59,7 @@ def stub_put(url)
 end
 
 def fixture_path
-  File.expand_path("../fixtures", __FILE__)
+  File.expand_path('../fixtures', __FILE__)
 end
 
 def fixture(file)
@@ -70,9 +68,9 @@ end
 
 def json_response(file)
   {
-    :body => fixture(file),
-    :headers => {
-      :content_type => 'application/json; charset=utf-8'
+    body: fixture(file),
+    headers: {
+      content_type: 'application/json; charset=utf-8'
     }
   }
 end
@@ -84,9 +82,9 @@ def ohana_url(url)
   uri = Addressable::URI.parse(url)
 
   uri.to_s
-  #url =~ /^http/ ? url : "http://ohana-api-demo.herokuapp.com/api#{url}"
+  # url =~ /^http/ ? url : "http://ohana-api-demo.herokuapp.com/api#{url}"
 end
 
 def api_token_client
-  Ohanakapa::Client.new(:api_token => test_api_token)
+  Ohanakapa::Client.new(api_token: test_api_token)
 end
