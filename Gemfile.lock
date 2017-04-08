@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     ohanakapa (1.1.2)
-      sawyer (~> 0.5.3)
+      sawyer (~> 0.8)
 
 GEM
   remote: https://rubygems.org/
@@ -25,7 +25,7 @@ GEM
     docile (1.1.5)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
-    faraday (0.9.1)
+    faraday (0.12.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.10)
     ffi2-generators (0.1.1)
@@ -50,7 +50,7 @@ GEM
       unicode-display_width (~> 0.1.1)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
-    json (1.8.3)
+    json (1.8.6)
     listen (3.0.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -303,9 +303,9 @@ GEM
     rubysl-yaml (2.1.0)
     rubysl-zlib (2.0.1)
     safe_yaml (1.0.4)
-    sawyer (0.5.5)
-      addressable (~> 2.3.5)
-      faraday (~> 0.8, < 0.10)
+    sawyer (0.8.1)
+      addressable (>= 2.3.5, < 2.6)
+      faraday (~> 0.8, < 1.0)
     shellany (0.0.1)
     simplecov (0.10.0)
       docile (~> 1.1.0)
@@ -340,7 +340,6 @@ DEPENDENCIES
   guard-rspec
   hirb-unicode
   jruby-openssl
-  json (~> 1.7)
   mime-types (< 2.0.0)
   multi_json
   netrc (~> 0.7)
@@ -359,3 +358,6 @@ DEPENDENCIES
   wirb
   wirble
   yard
+
+BUNDLED WITH
+   1.14.6
